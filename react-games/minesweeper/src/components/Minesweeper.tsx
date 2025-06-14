@@ -11,6 +11,7 @@ enum GameState {
 }
 
 // TODO -- when you click a bomb, it shows more than 1 bomb sometimes
+// TODO -- show flags that are not correct
 
 const Minesweeper = () => {
   const [difficulty, setDifficulty] = useState(Difficulty.BEGINNER)

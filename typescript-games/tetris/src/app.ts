@@ -1,18 +1,8 @@
+import { IPiece, JPiece, LPiece, OPiece, SPiece, Tetrimino, TPiece, ZPiece } from "./tetriminos";
+
 const BOX_SIZE = 40;
 const N_COLS = 10;
 const N_ROWS = 20;
-
-// tetriminos
-// i, l, j, t, o, s, z
-// 10 by 20
-
-// #00ffff -- I -- blue
-// #ffff00 -- O -- yellow
-// #800080 -- T -- purple
-// #00ff00 -- S -- green
-// #ff0000 -- Z -- red
-// #0000ff -- J -- blue
-// #ff7f00 -- L -- orange
 
 function draw() {
   const canvas = document.querySelector<HTMLCanvasElement>("#tetris")!;
@@ -21,7 +11,18 @@ function draw() {
 
   const ctx = canvas.getContext("2d");
   drawGrid(ctx);
-  // drawBlocks();
+
+  let piece: Tetrimino;
+
+  piece = new IPiece();
+  piece = new OPiece();
+  piece = new TPiece();
+  piece = new SPiece();
+  piece = new ZPiece();
+  piece = new JPiece();
+  piece = new LPiece();
+
+  drawBlocks(ctx, piece);
 }
 draw();
 
@@ -50,4 +51,14 @@ function drawGrid(ctx) {
   }
 
   ctx.stroke();
+}
+
+function drawBlocks(ctx, piece) {
+
+  ctx.fillStyle = piece.COLOR;
+  for (const point of piece.pointsToDraw) {
+    const x = point.x * (BOX_SIZE + 1) + 1;
+    const y = point.y * (BOX_SIZE + 1) + 1;
+    ctx.fillRect(x, y, BOX_SIZE, BOX_SIZE)
+  }
 }

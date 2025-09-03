@@ -89,8 +89,8 @@ export class Tetris {
   }
 
   private drawPiece(piece) {
-    for (const point of piece.pointsToDraw) {
-      this.drawRectangle(point.x, point.y, piece.COLOR);
+    for (const point of piece.coords) {
+      this.drawRectangle(point.row, point.col, piece.COLOR);
     }
   }
 

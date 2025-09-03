@@ -4,29 +4,10 @@ const BOX_SIZE = 40;
 const N_COLS = 10;
 const N_ROWS = 20;
 
-function draw() {
-  const canvas = document.querySelector<HTMLCanvasElement>("#tetris")!;
-  canvas.width = N_COLS * (BOX_SIZE + 1);
-  canvas.height = N_ROWS * (BOX_SIZE + 1);
+const canvas = document.querySelector<HTMLCanvasElement>("#tetris")!;
+const ctx = canvas.getContext("2d")!;
 
-  const ctx = canvas.getContext("2d");
-  drawGrid(ctx);
-
-  let piece: Tetrimino;
-
-  piece = new IPiece();
-  piece = new OPiece();
-  piece = new TPiece();
-  piece = new SPiece();
-  piece = new ZPiece();
-  piece = new JPiece();
-  piece = new LPiece();
-
-  drawBlocks(ctx, piece);
-}
-draw();
-
-function drawGrid(ctx) {
+function drawGrid() {
   // draw grid
   ctx.strokeStyle = "grey";
   ctx.lineWidth = 1;
@@ -53,8 +34,7 @@ function drawGrid(ctx) {
   ctx.stroke();
 }
 
-function drawBlocks(ctx, piece) {
-
+function drawBlocks(piece) {
   ctx.fillStyle = piece.COLOR;
   for (const point of piece.pointsToDraw) {
     const x = point.x * (BOX_SIZE + 1) + 1;
@@ -62,3 +42,27 @@ function drawBlocks(ctx, piece) {
     ctx.fillRect(x, y, BOX_SIZE, BOX_SIZE)
   }
 }
+
+function gameLoop() {
+  window.requestAnimationFrame(gameLoop);
+
+
+  canvas.width = N_COLS * (BOX_SIZE + 1);
+  canvas.height = N_ROWS * (BOX_SIZE + 1);
+
+  drawGrid();
+
+  let piece: Tetrimino;
+
+  piece = new IPiece();
+  piece = new OPiece();
+  piece = new TPiece();
+  piece = new SPiece();
+  piece = new ZPiece();
+  piece = new JPiece();
+  piece = new LPiece();
+
+  drawBlocks(piece);
+}
+
+gameLoop(performance.now());

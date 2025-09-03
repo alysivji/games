@@ -1,8 +1,12 @@
 export class Tetrimino {
+  pointsToDraw: { x: number, y: number }[];
 
+  step() {
+    this.pointsToDraw = this.pointsToDraw.map(point => ({ x: point.x + 1, y: point.y }));
+  }
 }
 
-export class IPiece implements Tetrimino {
+export class IPiece extends Tetrimino {
   COLOR = "#00ffff"
 
   pointsToDraw = [
@@ -13,7 +17,7 @@ export class IPiece implements Tetrimino {
   ]
 }
 
-export class OPiece implements Tetrimino {
+export class OPiece extends Tetrimino {
   COLOR = "#ffff00"
 
   pointsToDraw = [
@@ -24,7 +28,7 @@ export class OPiece implements Tetrimino {
   ]
 }
 
-export class TPiece implements Tetrimino {
+export class TPiece extends Tetrimino {
   COLOR = "#800080"
 
   pointsToDraw = [
@@ -35,7 +39,7 @@ export class TPiece implements Tetrimino {
   ]
 }
 
-export class SPiece implements Tetrimino {
+export class SPiece extends Tetrimino {
   COLOR = "#00ff00"
 
   pointsToDraw = [
@@ -46,7 +50,7 @@ export class SPiece implements Tetrimino {
   ]
 }
 
-export class ZPiece implements Tetrimino {
+export class ZPiece extends Tetrimino {
   COLOR = "#ff0000"
 
   pointsToDraw = [
@@ -57,7 +61,7 @@ export class ZPiece implements Tetrimino {
   ]
 }
 
-export class JPiece implements Tetrimino {
+export class JPiece extends Tetrimino {
   COLOR = "#0000ff"
 
   pointsToDraw = [
@@ -69,7 +73,7 @@ export class JPiece implements Tetrimino {
 }
 
 
-export class LPiece implements Tetrimino {
+export class LPiece extends Tetrimino {
   COLOR = "#ff7f00"
 
   pointsToDraw = [

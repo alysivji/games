@@ -16,21 +16,48 @@ export class GridMap {
   }
 
   set(key: GridCoordinate, value: string | null) {
-    const keyToUse = GridMap.transformed_key(key);
+    const keyToUse = GridMap.coordToStringKey(key);
     return this._map.set(keyToUse, value);
   }
 
   get(key: GridCoordinate) {
-    const keyToUse = GridMap.transformed_key(key);
+    const keyToUse = GridMap.coordToStringKey(key);
     return this._map.get(keyToUse);
   }
 
   has(key: GridCoordinate) {
-    const keyToUse = GridMap.transformed_key(key);
+    const keyToUse = GridMap.coordToStringKey(key);
     return this._map.has(keyToUse);
   }
 
-  private static transformed_key(key: GridCoordinate) {
+  get filledCoordinates() {
+    const filledCoordinates: GridCoordinate[] = [];
+
+    for (const key of this._map.keys()) {
+      const value = this._map.get(key);
+      if (typeof (value) === "string") {
+        filledCoordinates.push(GridMap.fromCoordString(key))
+      }
+    }
+
+    return filledCoordinates
+  }
+
+  private static coordToStringKey(key: GridCoordinate) {
     return `row=${key.row},col=${key.col}`
+  }
+
+  private static fromCoordString(coordString: string): GridCoordinate {
+    const regex = /row=(\d+),col=(\d+)/;
+    const match = coordString.match(regex);
+
+    if (match) {
+      // The first captured group `match[1]` is the row, the second `match[2]` is the column
+      const row = parseInt(match[1], 10);
+      const col = parseInt(match[2], 10);
+      return new GridCoordinate({ row, col });
+    }
+
+    throw new Error("should not get here")
   }
 }

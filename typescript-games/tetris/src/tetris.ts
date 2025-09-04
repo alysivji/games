@@ -54,13 +54,20 @@ export class Tetris {
     // TODO exit early maybe to un-nest this?
     const timeElapsedSinceLastTick = this.lastTick - this.lastGravityTick;
     if (timeElapsedSinceLastTick >= this.levelThresholdInMs()) {
+      this.lastGravityTick = this.lastTick
+
       if (this.canMoveDown()) {
-        // if the piece has nothing below it, it can move down
-        this.currentPiece.step()
-        this.lastGravityTick = this.lastTick
+        this.currentPiece.step();
+      } else {
+        this.lastLockTick = this.lastTick;
+
+        this.currentPiece.coords.forEach(coord => {
+          this.board.set(coord, this.currentPiece.COLOR);
+        })
+        this.dropRrandomizePiece();
       }
 
-      // if the piece has something below it, it locks
+      // TODO -- end game state
     }
   }
 
@@ -69,6 +76,11 @@ export class Tetris {
       for (let col = 0; col < N_COLS; col++) {
         this.clearRectangle(row, col)
       }
+    }
+
+    for (const filledCoord of this.board.filledCoordinates) {
+      const color = this.board.get(filledCoord)!;
+      this.drawRectangle(filledCoord.row, filledCoord.col, color);
     }
 
     this.drawPiece(this.currentPiece);
@@ -137,6 +149,9 @@ export class Tetris {
       return false;
     }
 
-    return true;
+    // is the row below empty?
+    const bottomRowBlocks = this.currentPiece.coords.filter(coord => coord.row === bottomRowValue);
+    const bottomRowBlocksMovedDownOneRow = bottomRowBlocks.map(coord => new GridCoordinate({ row: coord.row + 1, col: coord.col }));
+    return !bottomRowBlocksMovedDownOneRow.map(coord => this.board.get(coord)).some(color => color !== null)
   }
 }

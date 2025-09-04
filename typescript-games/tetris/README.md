@@ -25,3 +25,9 @@
 - Toolkits
   - [Easel.js](https://createjs.com/easeljs)
   - [pixi.js: The HTML5 Creation Engine](https://pixijs.com/)
+- Tetris
+  - [Spawn location](https://harddrop.com/wiki/Spawn_Location)
+
+## Notes
+
+- Spawn on line 0 and then we can worry about spawning above the field

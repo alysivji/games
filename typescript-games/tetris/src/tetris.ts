@@ -1,4 +1,5 @@
-import { IPiece, JPiece, LPiece, OPiece, SPiece, Tetrimino, TPiece, ZPiece } from "./tetriminos";
+import { GridMap } from "./grid";
+import { Tetrimino, ALL_TETRIMINOS } from "./tetriminos";
 
 const BOX_SIZE = 40;
 const N_COLS = 10;
@@ -13,25 +14,26 @@ const ctx = canvas.getContext("2d")!;
 export class Tetris {
   level: number;
   lastTick: number;
-  lastRender: number;
 
-  lastPieceDrop: number;
-  piece: Tetrimino;
+  board: GridMap;
 
-  ticketLength: number = 1 / 60 * 1000;  // 60 Hz
+  currentPiece: Tetrimino;
+  lastGravityTick: number;
+  lastLockTick: number;
+
+  tickLength: number = 1 / 60 * 1000;  // 60 Hz
   stopGameLoop: number;
 
   constructor({ level }: { level: number }) {
     this.level = level;
+    this.board = new GridMap();
   }
 
   start({ tick }: { tick: number }) {
     this.lastTick = tick;
-    this.lastRender = tick;
-    this.lastPieceDrop = tick;
+    this.lastGravityTick = tick;
 
-    this.piece = new JPiece()
-
+    this.currentPiece = Tetris.randomizePiece()
     this.drawBoard();
   }
 
@@ -42,9 +44,13 @@ export class Tetris {
   update(deltaTime: number) {
     this.lastTick += deltaTime;
 
-    if ((this.lastTick - this.lastPieceDrop) >= this.levelThresholdInMs()) {
-      this.piece.step()
-      this.lastPieceDrop = this.lastTick
+    // TODO exit early maybe to un-nest this?
+    if ((this.lastTick - this.lastGravityTick) >= this.levelThresholdInMs()) {
+      // if the piece has nothing below it, it can move down
+      this.currentPiece.step()
+      this.lastGravityTick = this.lastTick
+
+      // if the piece has something below it, it locks
     }
   }
 
@@ -55,7 +61,7 @@ export class Tetris {
       }
     }
 
-    this.drawPiece(this.piece);
+    this.drawPiece(this.currentPiece);
   }
 
   private levelThresholdInMs() {
@@ -106,5 +112,10 @@ export class Tetris {
     const topLeftX = col * (BOX_SIZE + 1) + 1;
     const topLeftY = row * (BOX_SIZE + 1) + 1;
     ctx.clearRect(topLeftX, topLeftY, BOX_SIZE, BOX_SIZE);
+  }
+
+  private static randomizePiece(): Tetrimino {
+    const randomIndex = Math.floor(Math.random() * ALL_TETRIMINOS.length);
+    return new ALL_TETRIMINOS[randomIndex];
   }
 }

@@ -1,4 +1,4 @@
-import { GridMap } from "./grid";
+import { GridCoordinate, GridMap } from "./grid";
 import { Tetrimino, ALL_TETRIMINOS } from "./tetriminos";
 
 const BOX_SIZE = 40;
@@ -26,14 +26,21 @@ export class Tetris {
 
   constructor({ level }: { level: number }) {
     this.level = level;
+
     this.board = new GridMap();
+    for (let row = 0; row < N_ROWS; row++) {
+      for (let col = 0; col < N_COLS; col++) {
+        const coord = new GridCoordinate({ row, col })
+        this.board.set(coord, null);
+      }
+    }
   }
 
   start({ tick }: { tick: number }) {
     this.lastTick = tick;
     this.lastGravityTick = tick;
 
-    this.currentPiece = Tetris.randomizePiece()
+    this.dropRrandomizePiece();
     this.drawBoard();
   }
 
@@ -45,10 +52,13 @@ export class Tetris {
     this.lastTick += deltaTime;
 
     // TODO exit early maybe to un-nest this?
-    if ((this.lastTick - this.lastGravityTick) >= this.levelThresholdInMs()) {
-      // if the piece has nothing below it, it can move down
-      this.currentPiece.step()
-      this.lastGravityTick = this.lastTick
+    const timeElapsedSinceLastTick = this.lastTick - this.lastGravityTick;
+    if (timeElapsedSinceLastTick >= this.levelThresholdInMs()) {
+      if (this.canMoveDown()) {
+        // if the piece has nothing below it, it can move down
+        this.currentPiece.step()
+        this.lastGravityTick = this.lastTick
+      }
 
       // if the piece has something below it, it locks
     }
@@ -114,8 +124,19 @@ export class Tetris {
     ctx.clearRect(topLeftX, topLeftY, BOX_SIZE, BOX_SIZE);
   }
 
-  private static randomizePiece(): Tetrimino {
+  private dropRrandomizePiece() {
     const randomIndex = Math.floor(Math.random() * ALL_TETRIMINOS.length);
-    return new ALL_TETRIMINOS[randomIndex];
+    this.currentPiece = new ALL_TETRIMINOS[randomIndex];
+  }
+
+  private canMoveDown(): boolean {
+    const bottomRowValue = Math.max(... this.currentPiece.coords.map(coord => coord.row));
+
+    // is it going below the floor?
+    if (bottomRowValue + 1 >= N_ROWS) {
+      return false;
+    }
+
+    return true;
   }
 }

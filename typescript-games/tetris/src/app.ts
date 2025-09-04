@@ -1,6 +1,6 @@
 import { Tetris } from "./tetris";
 
-const tetris = new Tetris({ level: 1 });
+const tetris = new Tetris({ level: 10 });
 
 (() => {
   function gameLoop(currentTime: number) {

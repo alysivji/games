@@ -9,13 +9,13 @@ export class GridCoordinate {
 }
 
 export class GridMap {
-  _map: Map<string, any>
+  _map: Map<string, string | null>
 
   constructor() {
-    this._map = new Map<string, any>();
+    this._map = new Map();
   }
 
-  set(key: GridCoordinate, value) {
+  set(key: GridCoordinate, value: string | null) {
     const keyToUse = GridMap.transformed_key(key);
     return this._map.set(keyToUse, value);
   }

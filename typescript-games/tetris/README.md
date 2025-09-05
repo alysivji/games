@@ -1,5 +1,11 @@
 # Tetris
 
+## Instructions
+
+1. `git clone` repo
+1. `npm install`
+1. `npm run start`
+
 ## Game Loop
 
 [link](https://developer.mozilla.org/en-US/docs/Games)

@@ -51,28 +51,27 @@ export class Tetris {
   update(deltaTime: number) {
     this.lastTick += deltaTime;
 
-    // TODO exit early maybe to un-nest this?
     const timeElapsedSinceLastTick = this.lastTick - this.lastGravityTick;
-    if (timeElapsedSinceLastTick >= this.levelThresholdInMs()) {
-      this.lastGravityTick = this.lastTick
+    if (!(timeElapsedSinceLastTick >= this.levelThresholdInMs())) return
 
-      if (this.canMoveDown()) {
-        this.currentPiece.step();
-      } else {
-        this.lastLockTick = this.lastTick;
+    this.lastGravityTick = this.lastTick
 
-        // end game state
-        if (this.currentPiece.coords.some(coord => coord.row < 0)) {
-          alert("Game Over");
-          this.stop();
-          return;
-        }
+    if (this.canMoveDown()) {
+      this.currentPiece.step();
+    } else {
+      this.lastLockTick = this.lastTick;
 
-        this.currentPiece.coords.forEach(coord => {
-          this.board.set(coord, this.currentPiece.COLOR);
-        })
-        this.dropRrandomizePiece();
+      // end game state
+      if (this.currentPiece.coords.some(coord => coord.row < 0)) {
+        alert("Game Over");
+        this.stop();
+        return;
       }
+
+      this.currentPiece.coords.forEach(coord => {
+        this.board.set(coord, this.currentPiece.COLOR);
+      })
+      this.dropRrandomizePiece();
     }
   }
 

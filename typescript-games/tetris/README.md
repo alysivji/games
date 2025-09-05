@@ -28,6 +28,17 @@
 - Tetris
   - [Spawn location](https://harddrop.com/wiki/Spawn_Location)
 
-## Notes
+## Todo
 
-- Spawn on line 0 and then we can worry about spawning above the field
+- [x] end game state
+  - spawn in level rows and figure out how to handle
+- [ ] controls
+  - [ ] key press left and right
+  - [ ] rotate
+  - [ ] reach: move pieces down faster, drop pieces
+- [ ] clearing lines
+  - keep score
+- [ ] ui -- ghost where the pieces ends up
+- [ ] ui -- show next 5 pieces
+- [ ] ui -- hold piece
+- [ ] reach: gamepad API

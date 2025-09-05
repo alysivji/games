@@ -61,13 +61,18 @@ export class Tetris {
       } else {
         this.lastLockTick = this.lastTick;
 
+        // end game state
+        if (this.currentPiece.coords.some(coord => coord.row < 0)) {
+          alert("Game Over");
+          this.stop();
+          return;
+        }
+
         this.currentPiece.coords.forEach(coord => {
           this.board.set(coord, this.currentPiece.COLOR);
         })
         this.dropRrandomizePiece();
       }
-
-      // TODO -- end game state
     }
   }
 

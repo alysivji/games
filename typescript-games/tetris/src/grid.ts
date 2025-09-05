@@ -48,7 +48,7 @@ export class GridMap {
   }
 
   private static fromCoordString(coordString: string): GridCoordinate {
-    const regex = /row=(\d+),col=(\d+)/;
+    const regex = /row=(-?\d+),col=(-?\d+)/;
     const match = coordString.match(regex);
 
     if (match) {

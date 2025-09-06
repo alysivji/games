@@ -1,6 +1,7 @@
 import { Tetris } from "./tetris";
 
-const tetris = new Tetris({ level: 10 });
+const canvas = document.querySelector<HTMLCanvasElement>("#tetris")!;
+const tetris = new Tetris({ canvas });
 
 (() => {
   function gameLoop(currentTime: number) {
@@ -8,7 +9,7 @@ const tetris = new Tetris({ level: 10 });
 
     const deltaTime = currentTime - tetris.lastTick;
 
-    tetris.update(deltaTime)
+    tetris.update(deltaTime);
     tetris.draw();
   }
 

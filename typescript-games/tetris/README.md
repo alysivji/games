@@ -25,7 +25,7 @@
 
 - MDN: [Canvas Tutorial](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial)
 - MDN: [Game Development](https://developer.mozilla.org/en-US/docs/Games)
-  - [ ] [Anatomy of a Video Game](https://developer.mozilla.org/en-US/docs/Games/Anatomy)
+  - [x] [Anatomy of a Video Game](https://developer.mozilla.org/en-US/docs/Games/Anatomy)
   - [ ] [Implementing controls using the Gamepad API](https://developer.mozilla.org/en-US/docs/Games/Techniques/Controls_Gamepad_API)
 - Stanford: [CS 100 Level OOP Tetris Handout](https://web.stanford.edu/class/archive/cs/cs108/cs108.1092/handouts/11HW2Tetris.pdf)
 - Toolkits

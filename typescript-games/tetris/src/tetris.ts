@@ -5,13 +5,9 @@ const BOX_SIZE = 40;
 const N_COLS = 10;
 const N_ROWS = 20;
 
-const canvas = document.querySelector<HTMLCanvasElement>("#tetris")!;
-canvas.width = N_COLS * (BOX_SIZE + 1);
-canvas.height = N_ROWS * (BOX_SIZE + 1);
-
-const ctx = canvas.getContext("2d")!;
-
 export class Tetris {
+  ctx: CanvasRenderingContext2D;
+
   level: number;
   lastTick: number;
 
@@ -24,8 +20,12 @@ export class Tetris {
   tickLength: number = 1 / 60 * 1000;  // 60 Hz
   stopGameLoop: number;
 
-  constructor({ level }: { level: number }) {
-    this.level = level;
+  constructor({ canvas }: { canvas: HTMLCanvasElement }) {
+    canvas.width = N_COLS * (BOX_SIZE + 1);
+    canvas.height = N_ROWS * (BOX_SIZE + 1);
+    this.ctx = canvas.getContext("2d")!;
+
+    this.level = 10;
 
     this.board = new GridMap();
     for (let row = 0; row < N_ROWS; row++) {
@@ -95,29 +95,29 @@ export class Tetris {
   }
 
   private drawBoard() {
-    ctx.strokeStyle = "grey";
-    ctx.lineWidth = 1;
-    ctx.beginPath()
+    this.ctx.strokeStyle = "grey";
+    this.ctx.lineWidth = 1;
+    this.ctx.beginPath()
 
     // column lines
     for (let i = 1; i < N_COLS; i++) {
       const x = (BOX_SIZE + 1) * i;
-      ctx.moveTo(x, 0);
+      this.ctx.moveTo(x, 0);
 
       const bottomY = (BOX_SIZE + 1) * N_ROWS;
-      ctx.lineTo(x, bottomY);
+      this.ctx.lineTo(x, bottomY);
     }
 
     // row lines
     for (let j = 1; j < N_ROWS; j++) {
       const y = (BOX_SIZE + 1) * j
-      ctx.moveTo(0, y);
+      this.ctx.moveTo(0, y);
 
       const rightX = (BOX_SIZE + 1) * N_COLS;
-      ctx.lineTo(rightX, y)
+      this.ctx.lineTo(rightX, y)
     }
 
-    ctx.stroke();
+    this.ctx.stroke();
   }
 
   private drawPiece(piece) {
@@ -127,17 +127,17 @@ export class Tetris {
   }
 
   private drawRectangle(row: number, col: number, color: string) {
-    ctx.fillStyle = color;
+    this.ctx.fillStyle = color;
 
     const topLeftX = col * (BOX_SIZE + 1) + 1;
     const topLeftY = row * (BOX_SIZE + 1) + 1;
-    ctx.fillRect(topLeftX, topLeftY, BOX_SIZE, BOX_SIZE)
+    this.ctx.fillRect(topLeftX, topLeftY, BOX_SIZE, BOX_SIZE)
   }
 
   private clearRectangle(row: number, col: number) {
     const topLeftX = col * (BOX_SIZE + 1) + 1;
     const topLeftY = row * (BOX_SIZE + 1) + 1;
-    ctx.clearRect(topLeftX, topLeftY, BOX_SIZE, BOX_SIZE);
+    this.ctx.clearRect(topLeftX, topLeftY, BOX_SIZE, BOX_SIZE);
   }
 
   private dropRrandomizePiece() {

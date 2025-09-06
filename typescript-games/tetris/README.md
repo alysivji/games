@@ -27,6 +27,9 @@
 - MDN: [Game Development](https://developer.mozilla.org/en-US/docs/Games)
   - [x] [Anatomy of a Video Game](https://developer.mozilla.org/en-US/docs/Games/Anatomy)
   - [ ] [Implementing controls using the Gamepad API](https://developer.mozilla.org/en-US/docs/Games/Techniques/Controls_Gamepad_API)
+  - Events
+    - [keydown](https://developer.mozilla.org/en-US/docs/Web/API/Element/keydown_event)
+    - [keyup](https://developer.mozilla.org/en-US/docs/Web/API/Element/keyup_event)
 - Stanford: [CS 100 Level OOP Tetris Handout](https://web.stanford.edu/class/archive/cs/cs108/cs108.1092/handouts/11HW2Tetris.pdf)
 - Toolkits
   - [Easel.js](https://createjs.com/easeljs)
@@ -45,6 +48,9 @@
 - [ ] clearing lines
   - keep score
 - [ ] ui -- ghost where the pieces ends up
-- [ ] ui -- show next 5 pieces
-- [ ] ui -- hold piece
+- [ ] 7 bag randomize piece
+- [ ] next queue
+  - [ ] next piece
+  - [ ] next 5 pieces
+- [ ] hold piece
 - [ ] reach: gamepad API

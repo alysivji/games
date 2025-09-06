@@ -20,6 +20,12 @@ export class Tetris {
   tickLength: number = 1 / 60 * 1000;  // 60 Hz
   stopGameLoop: number;
 
+  leftKeyPressed: boolean;
+  leftKeyPressedTime: number;
+
+  rightKeyPressed: boolean;
+  rightKeyPressedTime: number;
+
   constructor({ canvas }: { canvas: HTMLCanvasElement }) {
     canvas.width = N_COLS * (BOX_SIZE + 1);
     canvas.height = N_ROWS * (BOX_SIZE + 1);
@@ -34,6 +40,12 @@ export class Tetris {
         this.board.set(coord, null);
       }
     }
+
+    this.leftKeyPressed = false
+    this.rightKeyPressed = false;
+
+    window.addEventListener("keydown", this.handleKeyDown.bind(this));
+    window.addEventListener("keyup", this.handleKeyUp.bind(this));
   }
 
   start({ tick }: { tick: number }) {
@@ -157,5 +169,39 @@ export class Tetris {
     const bottomRowBlocks = this.currentPiece.coords.filter(coord => coord.row === bottomRowValue);
     const bottomRowBlocksMovedDownOneRow = bottomRowBlocks.map(coord => new GridCoordinate({ row: coord.row + 1, col: coord.col }));
     return !bottomRowBlocksMovedDownOneRow.map(coord => this.board.get(coord)).some(color => color !== null)
+  }
+
+  private handleKeyDown(e: KeyboardEvent) {
+    if (e.key === "ArrowLeft" && !this.leftKeyPressed) {
+      this.leftKeyPressed = true;
+      this.leftKeyPressedTime = performance.now();
+
+      console.log("keyDown", e.key)
+    }
+
+    if (e.key === "ArrowRight" && !this.rightKeyPressed) {
+      this.rightKeyPressed = true;
+      this.rightKeyPressedTime = performance.now();
+
+      console.log("keyDown", e.key)
+    }
+  }
+
+  private handleKeyUp(e: KeyboardEvent) {
+    if (e.key === "ArrowLeft") {
+      this.leftKeyPressed = false;
+      const leftKeyStop = performance.now();
+      const leftKeyElapsed = leftKeyStop - this.leftKeyPressedTime;
+
+      console.log("keyUp", e.key, "for", leftKeyElapsed)
+    }
+
+    if (e.key === "ArrowRight") {
+      this.rightKeyPressed = false;
+      const rightKeyStop = performance.now();
+      const rightKeyElapsed = rightKeyStop - this.rightKeyPressedTime;
+
+      console.log("keyUp", e.key, "for", rightKeyElapsed)
+    }
   }
 }

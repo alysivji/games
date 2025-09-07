@@ -5,8 +5,16 @@ export class Tetrimino {
   coords: GridCoordinate[];
   COLOR: string;
 
-  step() {
+  moveDown() {
     this.coords = this.coords.map(coord => new GridCoordinate({ row: coord.row + 1, col: coord.col }));
+  }
+
+  moveLeft() {
+    this.coords = this.coords.map(coord => new GridCoordinate({ row: coord.row, col: coord.col - 1 }));
+  }
+
+  moveRight() {
+    this.coords = this.coords.map(coord => new GridCoordinate({ row: coord.row, col: coord.col + 1 }));
   }
 }
 

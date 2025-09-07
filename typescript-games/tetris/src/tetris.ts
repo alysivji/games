@@ -17,7 +17,7 @@ export class Tetris {
   lastGravityTick: number;
   lastLockTick: number;
 
-  tickLength: number = 1 / 60 * 1000;  // 60 Hz
+  tickLength: number = 1 / 60 * 1000;  // 60 frames per second
   stopGameLoop: number;
 
   leftKeyPressed: boolean;
@@ -68,9 +68,21 @@ export class Tetris {
 
     this.lastGravityTick = this.lastTick
 
+    // TODO -- if we are holding down both left and right -- how to handle
+    // TODO -- probably need to move the left and right outside the gravity tick
+
+    if (this.leftKeyPressed && this.canMoveLeft()) {
+      this.currentPiece.moveLeft();
+    }
+
+    if (this.rightKeyPressed && this.canMoveRight()) {
+      this.currentPiece.moveRight();
+    }
+
     if (this.canMoveDown()) {
-      this.currentPiece.step();
+      this.currentPiece.moveDown();
     } else {
+      // lock the piece -- feels like we need to move this somewhere else
       this.lastLockTick = this.lastTick;
 
       // end game state
@@ -161,7 +173,7 @@ export class Tetris {
     const bottomRowValue = Math.max(... this.currentPiece.coords.map(coord => coord.row));
 
     // is it going below the floor?
-    if (bottomRowValue + 1 >= N_ROWS) {
+    if (bottomRowValue > N_ROWS) {
       return false;
     }
 
@@ -171,19 +183,39 @@ export class Tetris {
     return !bottomRowBlocksMovedDownOneRow.map(coord => this.board.get(coord)).some(color => color !== null)
   }
 
+  private canMoveLeft(): boolean {
+    const leftmostCol = Math.min(... this.currentPiece.coords.map(coord => coord.col));
+    if (leftmostCol <= 0) {
+      return false
+    }
+
+    // is col to the left empty?
+    const leftmostBlocks = this.currentPiece.coords.filter(coord => coord.col === leftmostCol);
+    const leftmostBlocksMovedLeftOneCol = leftmostBlocks.map(coord => new GridCoordinate({ row: coord.row, col: coord.col - 1 }));
+    return !leftmostBlocksMovedLeftOneCol.map(coord => this.board.get(coord)).some(color => color !== null)
+  }
+
+  private canMoveRight(): boolean {
+    const rightMostCol = Math.max(... this.currentPiece.coords.map(coord => coord.col));
+    if (rightMostCol >= N_COLS) {
+      return false
+    }
+
+    // is col to the right empty?
+    const rightmostBlocks = this.currentPiece.coords.filter(coord => coord.col === rightMostCol);
+    const rightmostBlocksMovedRightOneCol = rightmostBlocks.map(coord => new GridCoordinate({ row: coord.row, col: coord.col + 1 }));
+    return !rightmostBlocksMovedRightOneCol.map(coord => this.board.get(coord)).some(color => color !== null)
+  }
+
   private handleKeyDown(e: KeyboardEvent) {
     if (e.key === "ArrowLeft" && !this.leftKeyPressed) {
       this.leftKeyPressed = true;
       this.leftKeyPressedTime = performance.now();
-
-      console.log("keyDown", e.key)
     }
 
     if (e.key === "ArrowRight" && !this.rightKeyPressed) {
       this.rightKeyPressed = true;
       this.rightKeyPressedTime = performance.now();
-
-      console.log("keyDown", e.key)
     }
   }
 
@@ -192,16 +224,12 @@ export class Tetris {
       this.leftKeyPressed = false;
       const leftKeyStop = performance.now();
       const leftKeyElapsed = leftKeyStop - this.leftKeyPressedTime;
-
-      console.log("keyUp", e.key, "for", leftKeyElapsed)
     }
 
     if (e.key === "ArrowRight") {
       this.rightKeyPressed = false;
       const rightKeyStop = performance.now();
       const rightKeyElapsed = rightKeyStop - this.rightKeyPressedTime;
-
-      console.log("keyUp", e.key, "for", rightKeyElapsed)
     }
   }
 }

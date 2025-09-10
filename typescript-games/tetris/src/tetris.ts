@@ -20,11 +20,19 @@ export class Tetris {
   tickLength: number = 1 / 60 * 1000;  // 60 frames per second
   stopGameLoop: number;
 
+  lastKeyPressTick: number;
+
   leftKeyPressed: boolean;
   leftKeyPressedTime: number;
 
   rightKeyPressed: boolean;
   rightKeyPressedTime: number;
+
+  clockwiseRotationKeyPressed: boolean;
+  clockwiseRotationKeyPressedTime: number;
+
+  counterClockwiseRotationKeyPressed: boolean;
+  counterClockwiseRotationKeyPressedTime: number;
 
   constructor({ canvas }: { canvas: HTMLCanvasElement }) {
     canvas.width = N_COLS * (BOX_SIZE + 1);
@@ -43,6 +51,8 @@ export class Tetris {
 
     this.leftKeyPressed = false
     this.rightKeyPressed = false;
+    this.clockwiseRotationKeyPressed = false;
+    this.counterClockwiseRotationKeyPressed = false;
 
     window.addEventListener("keydown", this.handleKeyDown.bind(this));
     window.addEventListener("keyup", this.handleKeyUp.bind(this));
@@ -51,6 +61,7 @@ export class Tetris {
   start({ tick }: { tick: number }) {
     this.lastTick = tick;
     this.lastGravityTick = tick;
+    this.lastKeyPressTick = tick;
 
     this.dropRrandomizePiece();
     this.drawMatrix();
@@ -63,18 +74,22 @@ export class Tetris {
   update(deltaTime: number) {
     this.lastTick += deltaTime;
 
-    // TODO -- if we are holding down both left and right -- how to handle
-    // TODO -- probably need to move the left and right outside the gravity tick
-    if (this.leftKeyPressed && this.canMoveLeft()) {
-      this.currentPiece.moveLeft();
+    const timeElapsedSinceLastKeyPressTick = this.lastTick - this.lastKeyPressTick;
+    if (timeElapsedSinceLastKeyPressTick >= 60) { // 60ms is the key press window
+      this.lastKeyPressTick = this.lastTick;
+
+      // TODO -- if we are holding down both left and right -- how to handle
+      if (this.leftKeyPressed && this.canMoveLeft()) {
+        this.currentPiece.moveLeft();
+      }
+
+      if (this.rightKeyPressed && this.canMoveRight()) {
+        this.currentPiece.moveRight();
+      }
     }
 
-    if (this.rightKeyPressed && this.canMoveRight()) {
-      this.currentPiece.moveRight();
-    }
-
-    const timeElapsedSinceLastTick = this.lastTick - this.lastGravityTick;
-    if (timeElapsedSinceLastTick < this.levelThresholdInMs()) return
+    const timeElapsedSinceLastGravityTick = this.lastTick - this.lastGravityTick;
+    if (timeElapsedSinceLastGravityTick < this.levelThresholdInMs()) return
 
     this.lastGravityTick = this.lastTick
 
@@ -82,6 +97,7 @@ export class Tetris {
       this.currentPiece.moveDown();
     } else {
       // lock the piece -- feels like we need to move this somewhere else
+      // we should let the piece slide around after it hits the bottom
       this.lastLockTick = this.lastTick;
 
       // end game state
@@ -212,6 +228,17 @@ export class Tetris {
       this.rightKeyPressed = true;
       this.rightKeyPressedTime = performance.now();
     }
+
+    if (e.key === "XKey" && !this.clockwiseRotationKeyPressed) {
+      this.clockwiseRotationKeyPressed = true;
+      this.clockwiseRotationKeyPressedTime = performance.now()
+    }
+
+    if (e.key === "ZKey" && !this.counterClockwiseRotationKeyPressed) {
+      this.counterClockwiseRotationKeyPressed = true;
+      this.counterClockwiseRotationKeyPressedTime = performance.now()
+    }
+
   }
 
   private handleKeyUp(e: KeyboardEvent) {

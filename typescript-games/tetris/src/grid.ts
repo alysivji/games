@@ -51,13 +51,12 @@ export class GridMap {
     const regex = /row=(-?\d+),col=(-?\d+)/;
     const match = coordString.match(regex);
 
-    if (match) {
-      // The first captured group `match[1]` is the row, the second `match[2]` is the column
-      const row = parseInt(match[1], 10);
-      const col = parseInt(match[2], 10);
-      return new GridCoordinate({ row, col });
+    if (!match) {
+      throw new Error("should not get here")
     }
 
-    throw new Error("should not get here")
+    const row = parseInt(match[1], 10);
+    const col = parseInt(match[2], 10);
+    return new GridCoordinate({ row, col });
   }
 }

@@ -11,7 +11,7 @@ export class Tetris {
   level: number;
   lastTick: number;
 
-  board: GridMap;
+  matrix: GridMap;
 
   currentPiece: Tetrimino;
   lastGravityTick: number;
@@ -33,11 +33,11 @@ export class Tetris {
 
     this.level = 10;
 
-    this.board = new GridMap();
+    this.matrix = new GridMap();
     for (let row = 0; row < N_ROWS; row++) {
       for (let col = 0; col < N_COLS; col++) {
         const coord = new GridCoordinate({ row, col })
-        this.board.set(coord, null);
+        this.matrix.set(coord, null);
       }
     }
 
@@ -53,7 +53,7 @@ export class Tetris {
     this.lastGravityTick = tick;
 
     this.dropRrandomizePiece();
-    this.drawBoard();
+    this.drawMatrix();
   }
 
   stop() {
@@ -93,7 +93,7 @@ export class Tetris {
       }
 
       this.currentPiece.coords.forEach(coord => {
-        this.board.set(coord, this.currentPiece.COLOR);
+        this.matrix.set(coord, this.currentPiece.COLOR);
       })
       this.dropRrandomizePiece();
     }
@@ -106,19 +106,19 @@ export class Tetris {
       }
     }
 
-    for (const filledCoord of this.board.filledCoordinates) {
-      const color = this.board.get(filledCoord)!;
+    for (const filledCoord of this.matrix.filledCoordinates) {
+      const color = this.matrix.get(filledCoord)!;
       this.drawRectangle(filledCoord.row, filledCoord.col, color);
     }
 
-    this.drawPiece(this.currentPiece);
+    this.drawCurrentPiece(this.currentPiece);
   }
 
   private levelThresholdInMs() {
     return 1000 - (this.level - 1) * 100;
   }
 
-  private drawBoard() {
+  private drawMatrix() {
     this.ctx.strokeStyle = "grey";
     this.ctx.lineWidth = 1;
     this.ctx.beginPath()
@@ -144,7 +144,7 @@ export class Tetris {
     this.ctx.stroke();
   }
 
-  private drawPiece(piece) {
+  private drawCurrentPiece(piece) {
     for (const point of piece.coords) {
       this.drawRectangle(point.row, point.col, piece.COLOR);
     }
@@ -180,7 +180,7 @@ export class Tetris {
     // is the row below empty?
     const bottomRowBlocks = this.currentPiece.coords.filter(coord => coord.row === bottomRowValue);
     const bottomRowBlocksMovedDownOneRow = bottomRowBlocks.map(coord => new GridCoordinate({ row: coord.row + 1, col: coord.col }));
-    return !bottomRowBlocksMovedDownOneRow.map(coord => this.board.get(coord)).some(color => color !== null)
+    return !bottomRowBlocksMovedDownOneRow.map(coord => this.matrix.get(coord)).some(color => color !== null)
   }
 
   private canMoveLeft(): boolean {
@@ -192,7 +192,7 @@ export class Tetris {
     // is col to the left empty?
     const leftmostBlocks = this.currentPiece.coords.filter(coord => coord.col === leftmostCol);
     const leftmostBlocksMovedLeftOneCol = leftmostBlocks.map(coord => new GridCoordinate({ row: coord.row, col: coord.col - 1 }));
-    return !leftmostBlocksMovedLeftOneCol.map(coord => this.board.get(coord)).some(color => color !== null)
+    return !leftmostBlocksMovedLeftOneCol.map(coord => this.matrix.get(coord)).some(color => color !== null)
   }
 
   private canMoveRight(): boolean {
@@ -204,7 +204,7 @@ export class Tetris {
     // is col to the right empty?
     const rightmostBlocks = this.currentPiece.coords.filter(coord => coord.col === rightMostCol);
     const rightmostBlocksMovedRightOneCol = rightmostBlocks.map(coord => new GridCoordinate({ row: coord.row, col: coord.col + 1 }));
-    return !rightmostBlocksMovedRightOneCol.map(coord => this.board.get(coord)).some(color => color !== null)
+    return !rightmostBlocksMovedRightOneCol.map(coord => this.matrix.get(coord)).some(color => color !== null)
   }
 
   private handleKeyDown(e: KeyboardEvent) {

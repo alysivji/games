@@ -63,14 +63,8 @@ export class Tetris {
   update(deltaTime: number) {
     this.lastTick += deltaTime;
 
-    const timeElapsedSinceLastTick = this.lastTick - this.lastGravityTick;
-    if (!(timeElapsedSinceLastTick >= this.levelThresholdInMs())) return
-
-    this.lastGravityTick = this.lastTick
-
     // TODO -- if we are holding down both left and right -- how to handle
     // TODO -- probably need to move the left and right outside the gravity tick
-
     if (this.leftKeyPressed && this.canMoveLeft()) {
       this.currentPiece.moveLeft();
     }
@@ -78,6 +72,11 @@ export class Tetris {
     if (this.rightKeyPressed && this.canMoveRight()) {
       this.currentPiece.moveRight();
     }
+
+    const timeElapsedSinceLastTick = this.lastTick - this.lastGravityTick;
+    if (timeElapsedSinceLastTick < this.levelThresholdInMs()) return
+
+    this.lastGravityTick = this.lastTick
 
     if (this.canMoveDown()) {
       this.currentPiece.moveDown();
@@ -170,41 +169,37 @@ export class Tetris {
   }
 
   private canMoveDown(): boolean {
-    const bottomRowValue = Math.max(... this.currentPiece.coords.map(coord => coord.row));
+    const newPieceLocation = this.currentPiece.downOne();
 
-    // is it going below the floor?
-    if (bottomRowValue > N_ROWS) {
+    const isBelowWall = newPieceLocation.some(coord => coord.row >= N_ROWS)
+    if (isBelowWall) {
       return false;
     }
 
-    // is the row below empty?
-    const bottomRowBlocks = this.currentPiece.coords.filter(coord => coord.row === bottomRowValue);
-    const bottomRowBlocksMovedDownOneRow = bottomRowBlocks.map(coord => new GridCoordinate({ row: coord.row + 1, col: coord.col }));
-    return !bottomRowBlocksMovedDownOneRow.map(coord => this.matrix.get(coord)).some(color => color !== null)
+    // filter out the blocks that are above the field of play
+    return newPieceLocation.filter(coord => coord.row >= 0).every(coord => this.matrix.get(coord) === null);
   }
 
   private canMoveLeft(): boolean {
-    const leftmostCol = Math.min(... this.currentPiece.coords.map(coord => coord.col));
-    if (leftmostCol <= 0) {
-      return false
+    const newPieceLocation = this.currentPiece.leftOne();
+
+    const isLeftOfWall = newPieceLocation.some(coord => coord.col < 0);
+    if (isLeftOfWall) {
+      return false;
     }
 
-    // is col to the left empty?
-    const leftmostBlocks = this.currentPiece.coords.filter(coord => coord.col === leftmostCol);
-    const leftmostBlocksMovedLeftOneCol = leftmostBlocks.map(coord => new GridCoordinate({ row: coord.row, col: coord.col - 1 }));
-    return !leftmostBlocksMovedLeftOneCol.map(coord => this.matrix.get(coord)).some(color => color !== null)
+    return newPieceLocation.every(coord => this.matrix.get(coord) === null)
   }
 
   private canMoveRight(): boolean {
-    const rightMostCol = Math.max(... this.currentPiece.coords.map(coord => coord.col));
-    if (rightMostCol >= N_COLS) {
-      return false
+    const newPieceLocation = this.currentPiece.rightOne();
+
+    const isRightOfWall = newPieceLocation.some(coord => coord.col >= N_COLS);
+    if (isRightOfWall) {
+      return false;
     }
 
-    // is col to the right empty?
-    const rightmostBlocks = this.currentPiece.coords.filter(coord => coord.col === rightMostCol);
-    const rightmostBlocksMovedRightOneCol = rightmostBlocks.map(coord => new GridCoordinate({ row: coord.row, col: coord.col + 1 }));
-    return !rightmostBlocksMovedRightOneCol.map(coord => this.matrix.get(coord)).some(color => color !== null)
+    return newPieceLocation.every(coord => this.matrix.get(coord) === null);
   }
 
   private handleKeyDown(e: KeyboardEvent) {

@@ -35,16 +35,30 @@
   - [Easel.js](https://createjs.com/easeljs)
   - [pixi.js: The HTML5 Creation Engine](https://pixijs.com/)
 - Tetris
+  - [2009 Design Guidelines](https://archive.org/details/2009-tetris-variant-concepts_202201/2009%20Tetris%20Design%20Guideline/)
+    - [Summary](https://tetris.fandom.com/wiki/Tetris_Guideline)
   - [Spawn location](https://harddrop.com/wiki/Spawn_Location)
+- Other Projects
+  - [tetrigo](https://github.com/Broderick-Westrope/tetrigo)
+
+### AI
+
+- Google: [how to train a neural network to play tetris](https://www.google.com/search?client=firefox-b-1-d&q=how+to+train+a+neural+network+to+play+tetris)
+- Reddit: [I created a Tetris AI! I'm still working on making it able to do t-spins, and the parameters aren't fine-tuned yet.](https://www.reddit.com/r/Tetris/comments/na4dqm/i_created_a_tetris_ai_im_still_working_on_making/)
+- Reddit: [Machine Learning: How I made an AI that learns to play Tetris using Convolutional Neural Network (article, video, live demo)](https://www.reddit.com/r/compsci/comments/fvboab/machine_learning_how_i_made_an_ai_that_learns_to/)
 
 ## Todo
 
 - [x] end game state
   - spawn in level rows and figure out how to handle
 - [ ] controls
-  - [ ] key press left and right
+  - [x] key press left and right
   - [ ] rotate
+    - https://harddrop.com/wiki/SRS
   - [ ] reach: move pieces down faster, drop pieces
+- [ ] das / arr
+  - https://tetris.wiki/DAS
+  - https://tetrisconcept.net/threads/nes-tetris-das.3035/
 - [ ] clearing lines
   - keep score
 - [ ] ui -- ghost where the pieces ends up

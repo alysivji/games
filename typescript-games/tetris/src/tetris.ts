@@ -28,11 +28,8 @@ export class Tetris {
   rightKeyPressed: boolean;
   rightKeyPressedTime: number;
 
-  clockwiseRotationKeyPressed: boolean;
-  clockwiseRotationKeyPressedTime: number;
-
-  counterClockwiseRotationKeyPressed: boolean;
-  counterClockwiseRotationKeyPressedTime: number;
+  rotateClockwise: boolean;
+  rotateCounterClockwise: boolean;
 
   constructor({ canvas }: { canvas: HTMLCanvasElement }) {
     canvas.width = N_COLS * (BOX_SIZE + 1);
@@ -51,8 +48,8 @@ export class Tetris {
 
     this.leftKeyPressed = false
     this.rightKeyPressed = false;
-    this.clockwiseRotationKeyPressed = false;
-    this.counterClockwiseRotationKeyPressed = false;
+    this.rotateClockwise = false;
+    this.rotateCounterClockwise = false;
 
     window.addEventListener("keydown", this.handleKeyDown.bind(this));
     window.addEventListener("keyup", this.handleKeyUp.bind(this));
@@ -88,6 +85,19 @@ export class Tetris {
       }
     }
 
+    // TODO
+    // [ ] check if rotation is valid
+    // [ ] kick matrix
+    // [ ] can't hold rotate down
+    if (this.rotateClockwise) {
+      this.currentPiece.rotateClockwise();
+      this.rotateClockwise = false;
+    }
+    if (this.rotateCounterClockwise) {
+      this.currentPiece.rotateCounterClockwise();
+      this.rotateCounterClockwise = false;
+    }
+
     const timeElapsedSinceLastGravityTick = this.lastTick - this.lastGravityTick;
     if (timeElapsedSinceLastGravityTick < this.levelThresholdInMs()) return
 
@@ -97,6 +107,7 @@ export class Tetris {
       this.currentPiece.moveDown();
     } else {
       // lock the piece -- feels like we need to move this somewhere else
+      // TODO -- don't lock piece right away
       // we should let the piece slide around after it hits the bottom
       this.lastLockTick = this.lastTick;
 
@@ -219,24 +230,22 @@ export class Tetris {
   }
 
   private handleKeyDown(e: KeyboardEvent) {
-    if (e.key === "ArrowLeft" && !this.leftKeyPressed) {
+    if (e.code === "ArrowLeft" && !this.leftKeyPressed) {
       this.leftKeyPressed = true;
       this.leftKeyPressedTime = performance.now();
     }
 
-    if (e.key === "ArrowRight" && !this.rightKeyPressed) {
+    if (e.code === "ArrowRight" && !this.rightKeyPressed) {
       this.rightKeyPressed = true;
       this.rightKeyPressedTime = performance.now();
     }
 
-    if (e.key === "XKey" && !this.clockwiseRotationKeyPressed) {
-      this.clockwiseRotationKeyPressed = true;
-      this.clockwiseRotationKeyPressedTime = performance.now()
+    if (e.code === "KeyX" && !this.rotateClockwise) {
+      this.rotateClockwise = true;
     }
 
-    if (e.key === "ZKey" && !this.counterClockwiseRotationKeyPressed) {
-      this.counterClockwiseRotationKeyPressed = true;
-      this.counterClockwiseRotationKeyPressedTime = performance.now()
+    if (e.code === "KeyZ" && !this.rotateCounterClockwise) {
+      this.rotateCounterClockwise = true;
     }
 
   }

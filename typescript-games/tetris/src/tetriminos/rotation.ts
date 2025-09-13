@@ -1,7 +1,7 @@
 import { GridCoordinate } from "../grid";
 import { Tetrimino } from "./pieces";
 
-export abstract class RotationStrategy {
+export abstract class BaseRotationStrategy {
   piece: Tetrimino;
 
   constructor(piece: Tetrimino) {
@@ -14,7 +14,7 @@ export abstract class RotationStrategy {
 }
 
 
-export class OPieceRotationStrategy extends RotationStrategy {
+export class OPieceRotationStrategy extends BaseRotationStrategy {
   rotateClockwise() {
 
   }
@@ -25,7 +25,7 @@ export class OPieceRotationStrategy extends RotationStrategy {
 }
 
 
-export class IPieceRotationStrategy extends RotationStrategy {
+export class IPieceRotationStrategy extends BaseRotationStrategy {
   rotateClockwise() {
 
   }
@@ -36,7 +36,7 @@ export class IPieceRotationStrategy extends RotationStrategy {
 }
 
 
-export class TSZJLPieceRotationStrategy extends RotationStrategy {
+export class TSZJLPieceRotationStrategy extends BaseRotationStrategy {
   rotateCounterClockwise() {
     const rotatedCoordinates = this.piece.coords.map(
       coord => {

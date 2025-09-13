@@ -1,5 +1,5 @@
 import { GridCoordinate } from "../grid";
-import { IPieceRotationStrategy, OPieceRotationStrategy, RotationStrategy, TSZJLPieceRotationStrategy } from "./rotation";
+import { BaseRotationStrategy, IPieceRotationStrategy, OPieceRotationStrategy, TSZJLPieceRotationStrategy } from "./rotation";
 
 enum ROTATION {
   NORTH,
@@ -28,7 +28,7 @@ export abstract class Tetrimino {
   pivot = new GridCoordinate({ col: 4, row: -1 });
   COLOR: string;
   DIRECTION: ROTATION = ROTATION.NORTH;
-  ROTATION_STRATEGY: RotationStrategy;
+  ROTATION_STRATEGY: BaseRotationStrategy;
 
   downOne() {
     return this.coords.map(coord => new GridCoordinate({ row: coord.row + 1, col: coord.col }));

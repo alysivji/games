@@ -14,15 +14,15 @@ export abstract class BaseRotationStrategy {
 }
 
 export class OPieceRotationStrategy extends BaseRotationStrategy {
-  rotateClockwise() { }
+  rotateClockwise() {}
 
-  rotateCounterClockwise() { }
+  rotateCounterClockwise() {}
 }
 
 export class IPieceRotationStrategy extends BaseRotationStrategy {
-  rotateClockwise() { }
+  rotateClockwise() {}
 
-  rotateCounterClockwise() { }
+  rotateCounterClockwise() {}
 }
 
 export class TSZJLPieceRotationStrategy extends BaseRotationStrategy {

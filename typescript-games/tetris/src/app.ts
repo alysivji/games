@@ -1,4 +1,4 @@
-import { Tetris } from './tetris';
+import { Tetris } from './game';
 
 const canvas = document.querySelector<HTMLCanvasElement>('#tetris')!;
 const tetris = new Tetris({ canvas });

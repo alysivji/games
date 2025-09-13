@@ -20,7 +20,7 @@ export class Tetris {
   tickLength: number = 1 / 60 * 1000;  // 60 frames per second
   stopGameLoop: number;
 
-  lastKeyPressTick: number;
+  lastLateralMovementKeyPressTick: number;
 
   leftKeyPressed: boolean;
   leftKeyPressedTime: number;
@@ -28,8 +28,13 @@ export class Tetris {
   rightKeyPressed: boolean;
   rightKeyPressedTime: number;
 
-  rotateClockwise: boolean;
-  rotateCounterClockwise: boolean;
+  lastRotationTick: number;
+
+  rotateClockwiseKeyPressed: boolean;
+  rotateClockwiseKeyPressedTime: number;
+
+  rotateCounterClockwiseKeyPressed: boolean;
+  rotateCounterClockwisePressedTime: number;
 
   constructor({ canvas }: { canvas: HTMLCanvasElement }) {
     canvas.width = N_COLS * (BOX_SIZE + 1);
@@ -48,8 +53,8 @@ export class Tetris {
 
     this.leftKeyPressed = false
     this.rightKeyPressed = false;
-    this.rotateClockwise = false;
-    this.rotateCounterClockwise = false;
+    this.rotateClockwiseKeyPressed = false;
+    this.rotateCounterClockwiseKeyPressed = false;
 
     window.addEventListener("keydown", this.handleKeyDown.bind(this));
     window.addEventListener("keyup", this.handleKeyUp.bind(this));
@@ -57,8 +62,11 @@ export class Tetris {
 
   start({ tick }: { tick: number }) {
     this.lastTick = tick;
+
+    // TODO -- do we need to reset these when new pieces show up
     this.lastGravityTick = tick;
-    this.lastKeyPressTick = tick;
+    this.lastLateralMovementKeyPressTick = tick;
+    this.lastRotationTick = tick;
 
     this.dropRrandomizePiece();
     this.drawMatrix();
@@ -71,9 +79,9 @@ export class Tetris {
   update(deltaTime: number) {
     this.lastTick += deltaTime;
 
-    const timeElapsedSinceLastKeyPressTick = this.lastTick - this.lastKeyPressTick;
-    if (timeElapsedSinceLastKeyPressTick >= 60) { // 60ms is the key press window
-      this.lastKeyPressTick = this.lastTick;
+    const timeElapsedSinceLastLateralMovementKeyPressTick = this.lastTick - this.lastLateralMovementKeyPressTick;
+    if (timeElapsedSinceLastLateralMovementKeyPressTick >= 60) { // 60ms is the key press window
+      this.lastLateralMovementKeyPressTick = this.lastTick;
 
       // TODO -- if we are holding down both left and right -- how to handle
       if (this.leftKeyPressed && this.canMoveLeft()) {
@@ -88,14 +96,16 @@ export class Tetris {
     // TODO
     // [ ] check if rotation is valid
     // [ ] kick matrix
-    // [ ] can't hold rotate down
-    if (this.rotateClockwise) {
+    const pressedRotateClockwiseAfterLastRotation = this.rotateClockwiseKeyPressedTime > this.lastRotationTick;
+    if (this.rotateClockwiseKeyPressed && pressedRotateClockwiseAfterLastRotation) {
+      this.lastRotationTick = this.lastTick;
       this.currentPiece.rotateClockwise();
-      this.rotateClockwise = false;
     }
-    if (this.rotateCounterClockwise) {
+
+    const pressedRotateCounterClockwiseAfterLastRotation = this.rotateCounterClockwisePressedTime > this.lastRotationTick;
+    if (this.rotateCounterClockwiseKeyPressed && pressedRotateCounterClockwiseAfterLastRotation) {
+      this.lastRotationTick = this.lastTick;
       this.currentPiece.rotateCounterClockwise();
-      this.rotateCounterClockwise = false;
     }
 
     const timeElapsedSinceLastGravityTick = this.lastTick - this.lastGravityTick;
@@ -231,36 +241,41 @@ export class Tetris {
 
   private handleKeyDown(e: KeyboardEvent) {
     if (e.code === "ArrowLeft" && !this.leftKeyPressed) {
-      this.leftKeyPressed = true;
       this.leftKeyPressedTime = performance.now();
+      this.leftKeyPressed = true;
     }
 
     if (e.code === "ArrowRight" && !this.rightKeyPressed) {
-      this.rightKeyPressed = true;
       this.rightKeyPressedTime = performance.now();
+      this.rightKeyPressed = true;
     }
 
-    if (e.code === "KeyX" && !this.rotateClockwise) {
-      this.rotateClockwise = true;
+    if (e.code === "KeyX" && !this.rotateClockwiseKeyPressed) {
+      this.rotateClockwiseKeyPressedTime = performance.now();
+      this.rotateClockwiseKeyPressed = true;
     }
 
-    if (e.code === "KeyZ" && !this.rotateCounterClockwise) {
-      this.rotateCounterClockwise = true;
+    if (e.code === "KeyZ" && !this.rotateCounterClockwiseKeyPressed) {
+      this.rotateCounterClockwisePressedTime = performance.now();
+      this.rotateCounterClockwiseKeyPressed = true;
     }
-
   }
 
   private handleKeyUp(e: KeyboardEvent) {
     if (e.key === "ArrowLeft") {
       this.leftKeyPressed = false;
-      const leftKeyStop = performance.now();
-      const leftKeyElapsed = leftKeyStop - this.leftKeyPressedTime;
     }
 
     if (e.key === "ArrowRight") {
       this.rightKeyPressed = false;
-      const rightKeyStop = performance.now();
-      const rightKeyElapsed = rightKeyStop - this.rightKeyPressedTime;
+    }
+
+    if (e.code === "KeyX") {
+      this.rotateClockwiseKeyPressed = false;
+    }
+
+    if (e.code === "KeyZ") {
+      this.rotateCounterClockwiseKeyPressed = false;
     }
   }
 }

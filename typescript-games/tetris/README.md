@@ -68,3 +68,4 @@
   - [ ] next 5 pieces
 - [ ] hold piece
 - [ ] reach: gamepad API
+- [ ] collect stats for things like # rotations, # drops, pieces seen

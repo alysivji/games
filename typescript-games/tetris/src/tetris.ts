@@ -41,7 +41,7 @@ export class Tetris {
     canvas.height = N_ROWS * (BOX_SIZE + 1);
     this.ctx = canvas.getContext("2d")!;
 
-    this.level = 10;
+    this.level = 1;
 
     this.matrix = new GridMap();
     for (let row = 0; row < N_ROWS; row++) {
@@ -53,7 +53,6 @@ export class Tetris {
 
     this.leftKeyPressed = false
     this.rightKeyPressed = false;
-    this.downKeyPressed = false;
     this.rotateClockwiseKeyPressed = false;
     this.rotateCounterClockwiseKeyPressed = false;
 

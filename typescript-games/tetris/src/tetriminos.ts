@@ -27,6 +27,7 @@ export abstract class Tetrimino {
   pivot = new GridCoordinate({ col: 4, row: -1 });
   COLOR: string;
   DIRECTION: ROTATION = ROTATION.NORTH;
+  ROTATION_STRATEGY: RotationStrategy;
 
   downOne() {
     return this.coords.map(coord => new GridCoordinate({ row: coord.row + 1, col: coord.col }));
@@ -57,77 +58,40 @@ export abstract class Tetrimino {
 
   rotateClockwise() {
     this.DIRECTION = CLOCKWISE_ROTATION_MAP[this.DIRECTION];
+    this.ROTATION_STRATEGY.rotateClockwise();
   }
 
   rotateCounterClockwise() {
     this.DIRECTION = COUNTER_CLOCKWISE_ROTATION_MAP[this.DIRECTION];
+    this.ROTATION_STRATEGY.rotateCounterClockwise();
   }
 }
 
 class IPiece extends Tetrimino {
   COLOR = "#00ffff"
-
+  ROTATION_STRATEGY = new IPieceRotationStrategy(this);
   coords = [
     new GridCoordinate({ col: 3, row: -1 }),
     new GridCoordinate({ col: 4, row: -1 }),
     new GridCoordinate({ col: 5, row: -1 }),
     new GridCoordinate({ col: 6, row: -1 }),
   ]
-
-  // TODO -- we'll need to do this properly
-  rotateClockwise() { }
-
-  rotateCounterClockwise() { }
 }
 
 class OPiece extends Tetrimino {
   COLOR = "#ffff00"
-
+  ROTATION_STRATEGY = new OPieceRotationStrategy(this);
   coords = [
     new GridCoordinate({ col: 4, row: -2 }),
     new GridCoordinate({ col: 5, row: -2 }),
     new GridCoordinate({ col: 4, row: -1 }),
     new GridCoordinate({ col: 5, row: -1 }),
   ]
-
-  rotateClockwise() { }
-
-  rotateCounterClockwise() { }
 }
 
-class TSZJLPiece extends Tetrimino {
-  rotateCounterClockwise() {
-    super.rotateCounterClockwise();
-
-    const rotatedCoordinates = this.coords.map(
-      coord => {
-        const transposedCoord = new GridCoordinate({ col: coord.col - this.pivot.col, row: coord.row - this.pivot.row });
-        const rotatedCoord = new GridCoordinate({ col: transposedCoord.row, row: - transposedCoord.col });
-        return new GridCoordinate({ col: rotatedCoord.col + this.pivot.col, row: rotatedCoord.row + this.pivot.row })
-      });
-
-    // go through all 5 transformations to see
-    this.coords = rotatedCoordinates;
-  }
-
-  rotateClockwise() {
-    super.rotateClockwise();
-
-    const rotatedCoordinates = this.coords.map(
-      coord => {
-        const transposedCoord = new GridCoordinate({ col: coord.col - this.pivot.col, row: coord.row - this.pivot.row });
-        const rotatedCoord = new GridCoordinate({ col: - transposedCoord.row, row: transposedCoord.col });
-        return new GridCoordinate({ col: rotatedCoord.col + this.pivot.col, row: rotatedCoord.row + this.pivot.row })
-      });
-
-    // go through all 5 transformations to see
-    this.coords = rotatedCoordinates;
-  }
-}
-
-class TPiece extends TSZJLPiece {
+class TPiece extends Tetrimino {
   COLOR = "#800080"
-
+  ROTATION_STRATEGY = new TSZJLPieceRotationStrategy(this);
   coords = [
     new GridCoordinate({ col: 4, row: -2 }),
     new GridCoordinate({ col: 3, row: -1 }),
@@ -136,81 +100,49 @@ class TPiece extends TSZJLPiece {
   ]
 }
 
-class SPiece extends TSZJLPiece {
+class SPiece extends Tetrimino {
   COLOR = "#00ff00"
-
+  ROTATION_STRATEGY = new TSZJLPieceRotationStrategy(this);
   coords = [
     new GridCoordinate({ col: 4, row: -2 }),
     new GridCoordinate({ col: 5, row: -2 }),
     new GridCoordinate({ col: 3, row: -1 }),
     new GridCoordinate({ col: 4, row: -1 }),
   ]
-
-  rotateClockwise() {
-    super.rotateClockwise();
-  }
-
-  rotateCounterClockwise() {
-    super.rotateCounterClockwise();
-  }
 }
 
-class ZPiece extends TSZJLPiece {
+class ZPiece extends Tetrimino {
   COLOR = "#ff0000"
-
+  ROTATION_STRATEGY = new TSZJLPieceRotationStrategy(this);
   coords = [
     new GridCoordinate({ col: 3, row: -2 }),
     new GridCoordinate({ col: 4, row: -2 }),
     new GridCoordinate({ col: 4, row: -1 }),
     new GridCoordinate({ col: 5, row: -1 }),
   ]
-
-  rotateClockwise() {
-    super.rotateClockwise();
-  }
-
-  rotateCounterClockwise() {
-    super.rotateCounterClockwise();
-  }
 }
 
-class JPiece extends TSZJLPiece {
+class JPiece extends Tetrimino {
   COLOR = "#0000ff"
-
+  ROTATION_STRATEGY = new TSZJLPieceRotationStrategy(this);
   coords = [
     new GridCoordinate({ col: 3, row: -2 }),
     new GridCoordinate({ col: 3, row: -1 }),
     new GridCoordinate({ col: 4, row: -1 }),
     new GridCoordinate({ col: 5, row: -1 }),
   ]
-
-  rotateClockwise() {
-    super.rotateClockwise();
-  }
-
-  rotateCounterClockwise() {
-    super.rotateCounterClockwise();
-  }
 }
 
 
-class LPiece extends TSZJLPiece {
+class LPiece extends Tetrimino {
   COLOR = "#ff7f00"
-
+  ROTATION_STRATEGY = new TSZJLPieceRotationStrategy(this);
   coords = [
     new GridCoordinate({ col: 5, row: -2 }),
     new GridCoordinate({ col: 3, row: -1 }),
     new GridCoordinate({ col: 4, row: -1 }),
     new GridCoordinate({ col: 5, row: -1 }),
   ]
-
-  rotateClockwise() {
-    super.rotateClockwise();
-  }
-
-  rotateCounterClockwise() {
-    super.rotateCounterClockwise();
-  }
 }
 
 export const ALL_TETRIMINOS = [
@@ -222,3 +154,65 @@ export const ALL_TETRIMINOS = [
   TPiece,
   ZPiece,
 ]
+
+
+abstract class RotationStrategy {
+  piece: Tetrimino;
+
+  constructor(piece: Tetrimino) {
+    this.piece = piece
+  }
+
+  abstract rotateClockwise()
+
+  abstract rotateCounterClockwise()
+}
+
+
+class OPieceRotationStrategy extends RotationStrategy {
+  rotateClockwise() {
+
+  }
+
+  rotateCounterClockwise() {
+
+  }
+}
+
+
+class IPieceRotationStrategy extends RotationStrategy {
+  rotateClockwise() {
+
+  }
+
+  rotateCounterClockwise() {
+
+  }
+}
+
+
+class TSZJLPieceRotationStrategy extends RotationStrategy {
+  rotateCounterClockwise() {
+    const rotatedCoordinates = this.piece.coords.map(
+      coord => {
+        const transposedCoord = new GridCoordinate({ col: coord.col - this.piece.pivot.col, row: coord.row - this.piece.pivot.row });
+        const rotatedCoord = new GridCoordinate({ col: transposedCoord.row, row: - transposedCoord.col });
+        return new GridCoordinate({ col: rotatedCoord.col + this.piece.pivot.col, row: rotatedCoord.row + this.piece.pivot.row })
+      });
+
+    // go through all 5 transformations to see
+    this.piece.coords = rotatedCoordinates;
+  }
+
+  rotateClockwise() {
+    const rotatedCoordinates = this.piece.coords.map(
+      coord => {
+        const transposedCoord = new GridCoordinate({ col: coord.col - this.piece.pivot.col, row: coord.row - this.piece.pivot.row });
+        const rotatedCoord = new GridCoordinate({ col: - transposedCoord.row, row: transposedCoord.col });
+        return new GridCoordinate({ col: rotatedCoord.col + this.piece.pivot.col, row: rotatedCoord.row + this.piece.pivot.row })
+      });
+
+    // go through all 5 transformations to see
+    this.piece.coords = rotatedCoordinates;
+  }
+}

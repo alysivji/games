@@ -53,6 +53,7 @@ export class Tetris {
 
     this.leftKeyPressed = false
     this.rightKeyPressed = false;
+    this.downKeyPressed = false;
     this.rotateClockwiseKeyPressed = false;
     this.rotateCounterClockwiseKeyPressed = false;
 

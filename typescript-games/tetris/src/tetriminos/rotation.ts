@@ -8,21 +8,21 @@ export abstract class BaseRotationStrategy {
     this.piece = piece;
   }
 
-  abstract rotateClockwise();
+  abstract rotateClockwise(): void;
 
-  abstract rotateCounterClockwise();
+  abstract rotateCounterClockwise(): void;
 }
 
 export class OPieceRotationStrategy extends BaseRotationStrategy {
-  rotateClockwise() {}
+  rotateClockwise() { }
 
-  rotateCounterClockwise() {}
+  rotateCounterClockwise() { }
 }
 
 export class IPieceRotationStrategy extends BaseRotationStrategy {
-  rotateClockwise() {}
+  rotateClockwise() { }
 
-  rotateCounterClockwise() {}
+  rotateCounterClockwise() { }
 }
 
 export class TSZJLPieceRotationStrategy extends BaseRotationStrategy {

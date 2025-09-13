@@ -1,27 +1,31 @@
-import { GridCoordinate } from "../grid";
-import { BaseRotationStrategy, IPieceRotationStrategy, OPieceRotationStrategy, TSZJLPieceRotationStrategy } from "./rotation";
+import { GridCoordinate } from '../grid';
+import {
+  BaseRotationStrategy,
+  IPieceRotationStrategy,
+  OPieceRotationStrategy,
+  TSZJLPieceRotationStrategy,
+} from './rotation';
 
 enum ROTATION {
   NORTH,
   EAST,
   SOUTH,
-  WEST
+  WEST,
 }
 
 const CLOCKWISE_ROTATION_MAP = {
   [ROTATION.NORTH]: ROTATION.EAST,
   [ROTATION.EAST]: ROTATION.SOUTH,
   [ROTATION.SOUTH]: ROTATION.WEST,
-  [ROTATION.WEST]: ROTATION.NORTH
-}
+  [ROTATION.WEST]: ROTATION.NORTH,
+};
 
 const COUNTER_CLOCKWISE_ROTATION_MAP = {
   [ROTATION.NORTH]: ROTATION.WEST,
   [ROTATION.WEST]: ROTATION.SOUTH,
   [ROTATION.SOUTH]: ROTATION.EAST,
   [ROTATION.EAST]: ROTATION.NORTH,
-}
-
+};
 
 export abstract class Tetrimino {
   coords: GridCoordinate[];
@@ -31,29 +35,44 @@ export abstract class Tetrimino {
   ROTATION_STRATEGY: BaseRotationStrategy;
 
   downOne() {
-    return this.coords.map(coord => new GridCoordinate({ row: coord.row + 1, col: coord.col }));
+    return this.coords.map(
+      (coord) => new GridCoordinate({ row: coord.row + 1, col: coord.col })
+    );
   }
 
   moveDown() {
-    this.pivot = new GridCoordinate({ row: this.pivot.row + 1, col: this.pivot.col })
+    this.pivot = new GridCoordinate({
+      row: this.pivot.row + 1,
+      col: this.pivot.col,
+    });
     this.coords = this.downOne();
   }
 
   leftOne() {
-    return this.coords.map(coord => new GridCoordinate({ row: coord.row, col: coord.col - 1 }));
+    return this.coords.map(
+      (coord) => new GridCoordinate({ row: coord.row, col: coord.col - 1 })
+    );
   }
 
   moveLeft() {
-    this.pivot = new GridCoordinate({ row: this.pivot.row, col: this.pivot.col - 1 })
+    this.pivot = new GridCoordinate({
+      row: this.pivot.row,
+      col: this.pivot.col - 1,
+    });
     this.coords = this.leftOne();
   }
 
   rightOne() {
-    return this.coords.map(coord => new GridCoordinate({ row: coord.row, col: coord.col + 1 }));
+    return this.coords.map(
+      (coord) => new GridCoordinate({ row: coord.row, col: coord.col + 1 })
+    );
   }
 
   moveRight() {
-    this.pivot = new GridCoordinate({ row: this.pivot.row, col: this.pivot.col + 1 })
+    this.pivot = new GridCoordinate({
+      row: this.pivot.row,
+      col: this.pivot.col + 1,
+    });
     this.coords = this.rightOne();
   }
 
@@ -69,81 +88,80 @@ export abstract class Tetrimino {
 }
 
 class IPiece extends Tetrimino {
-  COLOR = "#00ffff"
+  COLOR = '#00ffff';
   ROTATION_STRATEGY = new IPieceRotationStrategy(this);
   coords = [
     new GridCoordinate({ col: 3, row: -1 }),
     new GridCoordinate({ col: 4, row: -1 }),
     new GridCoordinate({ col: 5, row: -1 }),
     new GridCoordinate({ col: 6, row: -1 }),
-  ]
+  ];
 }
 
 class OPiece extends Tetrimino {
-  COLOR = "#ffff00"
+  COLOR = '#ffff00';
   ROTATION_STRATEGY = new OPieceRotationStrategy(this);
   coords = [
     new GridCoordinate({ col: 4, row: -2 }),
     new GridCoordinate({ col: 5, row: -2 }),
     new GridCoordinate({ col: 4, row: -1 }),
     new GridCoordinate({ col: 5, row: -1 }),
-  ]
+  ];
 }
 
 class TPiece extends Tetrimino {
-  COLOR = "#800080"
+  COLOR = '#800080';
   ROTATION_STRATEGY = new TSZJLPieceRotationStrategy(this);
   coords = [
     new GridCoordinate({ col: 4, row: -2 }),
     new GridCoordinate({ col: 3, row: -1 }),
     new GridCoordinate({ col: 4, row: -1 }),
     new GridCoordinate({ col: 5, row: -1 }),
-  ]
+  ];
 }
 
 class SPiece extends Tetrimino {
-  COLOR = "#00ff00"
+  COLOR = '#00ff00';
   ROTATION_STRATEGY = new TSZJLPieceRotationStrategy(this);
   coords = [
     new GridCoordinate({ col: 4, row: -2 }),
     new GridCoordinate({ col: 5, row: -2 }),
     new GridCoordinate({ col: 3, row: -1 }),
     new GridCoordinate({ col: 4, row: -1 }),
-  ]
+  ];
 }
 
 class ZPiece extends Tetrimino {
-  COLOR = "#ff0000"
+  COLOR = '#ff0000';
   ROTATION_STRATEGY = new TSZJLPieceRotationStrategy(this);
   coords = [
     new GridCoordinate({ col: 3, row: -2 }),
     new GridCoordinate({ col: 4, row: -2 }),
     new GridCoordinate({ col: 4, row: -1 }),
     new GridCoordinate({ col: 5, row: -1 }),
-  ]
+  ];
 }
 
 class JPiece extends Tetrimino {
-  COLOR = "#0000ff"
+  COLOR = '#0000ff';
   ROTATION_STRATEGY = new TSZJLPieceRotationStrategy(this);
   coords = [
     new GridCoordinate({ col: 3, row: -2 }),
     new GridCoordinate({ col: 3, row: -1 }),
     new GridCoordinate({ col: 4, row: -1 }),
     new GridCoordinate({ col: 5, row: -1 }),
-  ]
+  ];
 }
 
-
 class LPiece extends Tetrimino {
-  COLOR = "#ff7f00"
+  COLOR = '#ff7f00';
   ROTATION_STRATEGY = new TSZJLPieceRotationStrategy(this);
   coords = [
     new GridCoordinate({ col: 5, row: -2 }),
     new GridCoordinate({ col: 3, row: -1 }),
     new GridCoordinate({ col: 4, row: -1 }),
     new GridCoordinate({ col: 5, row: -1 }),
-  ]
+  ];
 }
 
 export const ALL_TETRIMINOS = [
@@ -154,4 +172,4 @@ export const ALL_TETRIMINOS = [
   SPiece,
   TPiece,
   ZPiece,
-]
+];

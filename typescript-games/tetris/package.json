@@ -5,10 +5,11 @@
   "source": "src/index.html",
   "scripts": {
     "start": "parcel",
-    "build": "parcel build"
+    "build": "parcel build",
+    "format": "prettier --write src/"
   },
-  "dependencies": {},
   "devDependencies": {
-    "parcel": "^2.14.0"
+    "parcel": "^2.14.0",
+    "prettier": "^3.6.2"
   }
 }

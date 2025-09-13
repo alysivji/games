@@ -1,15 +1,15 @@
 export class GridCoordinate {
-  row: number
-  col: number
+  row: number;
+  col: number;
 
-  constructor({ row, col }: { row: number, col: number }) {
+  constructor({ row, col }: { row: number; col: number }) {
     this.row = row;
     this.col = col;
   }
 }
 
 export class GridMap {
-  _map: Map<string, string | null>
+  _map: Map<string, string | null>;
 
   constructor() {
     this._map = new Map();
@@ -35,16 +35,16 @@ export class GridMap {
 
     for (const key of this._map.keys()) {
       const value = this._map.get(key);
-      if (typeof (value) === "string") {
-        filledCoordinates.push(GridMap.fromCoordString(key))
+      if (typeof value === 'string') {
+        filledCoordinates.push(GridMap.fromCoordString(key));
       }
     }
 
-    return filledCoordinates
+    return filledCoordinates;
   }
 
   private static coordToStringKey(key: GridCoordinate) {
-    return `row=${key.row},col=${key.col}`
+    return `row=${key.row},col=${key.col}`;
   }
 
   private static fromCoordString(coordString: string): GridCoordinate {
@@ -52,7 +52,7 @@ export class GridMap {
     const match = coordString.match(regex);
 
     if (!match) {
-      throw new Error("should not get here")
+      throw new Error('should not get here');
     }
 
     const row = parseInt(match[1], 10);

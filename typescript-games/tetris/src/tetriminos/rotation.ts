@@ -1,61 +1,66 @@
-import { GridCoordinate } from "../grid";
-import { Tetrimino } from "./pieces";
+import { GridCoordinate } from '../grid';
+import { Tetrimino } from './pieces';
 
 export abstract class BaseRotationStrategy {
   piece: Tetrimino;
 
   constructor(piece: Tetrimino) {
-    this.piece = piece
+    this.piece = piece;
   }
 
-  abstract rotateClockwise()
+  abstract rotateClockwise();
 
-  abstract rotateCounterClockwise()
+  abstract rotateCounterClockwise();
 }
-
 
 export class OPieceRotationStrategy extends BaseRotationStrategy {
-  rotateClockwise() {
+  rotateClockwise() {}
 
-  }
-
-  rotateCounterClockwise() {
-
-  }
+  rotateCounterClockwise() {}
 }
-
 
 export class IPieceRotationStrategy extends BaseRotationStrategy {
-  rotateClockwise() {
+  rotateClockwise() {}
 
-  }
-
-  rotateCounterClockwise() {
-
-  }
+  rotateCounterClockwise() {}
 }
-
 
 export class TSZJLPieceRotationStrategy extends BaseRotationStrategy {
   rotateCounterClockwise() {
-    const rotatedCoordinates = this.piece.coords.map(
-      coord => {
-        const transposedCoord = new GridCoordinate({ col: coord.col - this.piece.pivot.col, row: coord.row - this.piece.pivot.row });
-        const rotatedCoord = new GridCoordinate({ col: transposedCoord.row, row: - transposedCoord.col });
-        return new GridCoordinate({ col: rotatedCoord.col + this.piece.pivot.col, row: rotatedCoord.row + this.piece.pivot.row })
+    const rotatedCoordinates = this.piece.coords.map((coord) => {
+      const transposedCoord = new GridCoordinate({
+        col: coord.col - this.piece.pivot.col,
+        row: coord.row - this.piece.pivot.row,
       });
+      const rotatedCoord = new GridCoordinate({
+        col: transposedCoord.row,
+        row: -transposedCoord.col,
+      });
+      return new GridCoordinate({
+        col: rotatedCoord.col + this.piece.pivot.col,
+        row: rotatedCoord.row + this.piece.pivot.row,
+      });
+    });
 
     // go through all 5 transformations to see
     this.piece.coords = rotatedCoordinates;
   }
 
   rotateClockwise() {
-    const rotatedCoordinates = this.piece.coords.map(
-      coord => {
-        const transposedCoord = new GridCoordinate({ col: coord.col - this.piece.pivot.col, row: coord.row - this.piece.pivot.row });
-        const rotatedCoord = new GridCoordinate({ col: - transposedCoord.row, row: transposedCoord.col });
-        return new GridCoordinate({ col: rotatedCoord.col + this.piece.pivot.col, row: rotatedCoord.row + this.piece.pivot.row })
+    const rotatedCoordinates = this.piece.coords.map((coord) => {
+      const transposedCoord = new GridCoordinate({
+        col: coord.col - this.piece.pivot.col,
+        row: coord.row - this.piece.pivot.row,
       });
+      const rotatedCoord = new GridCoordinate({
+        col: -transposedCoord.row,
+        row: transposedCoord.col,
+      });
+      return new GridCoordinate({
+        col: rotatedCoord.col + this.piece.pivot.col,
+        row: rotatedCoord.row + this.piece.pivot.row,
+      });
+    });
 
     // go through all 5 transformations to see
     this.piece.coords = rotatedCoordinates;

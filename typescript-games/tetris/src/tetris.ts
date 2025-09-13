@@ -1,5 +1,5 @@
-import { GridCoordinate, GridMap } from "./grid";
-import { Tetrimino, ALL_TETRIMINOS } from "./tetriminos";
+import { GridCoordinate, GridMap } from './grid';
+import { Tetrimino, ALL_TETRIMINOS } from './tetriminos';
 
 const BOX_SIZE = 40;
 const N_COLS = 10;
@@ -17,7 +17,7 @@ export class Tetris {
   lastGravityTick: number;
   lastLockTick: number;
 
-  tickLength: number = 1 / 60 * 1000;  // 60 frames per second
+  tickLength: number = (1 / 60) * 1000; // 60 frames per second
   stopGameLoop: number;
 
   lastLateralMovementKeyPressTick: number;
@@ -39,25 +39,25 @@ export class Tetris {
   constructor({ canvas }: { canvas: HTMLCanvasElement }) {
     canvas.width = N_COLS * (BOX_SIZE + 1);
     canvas.height = N_ROWS * (BOX_SIZE + 1);
-    this.ctx = canvas.getContext("2d")!;
+    this.ctx = canvas.getContext('2d')!;
 
     this.level = 1;
 
     this.matrix = new GridMap();
     for (let row = 0; row < N_ROWS; row++) {
       for (let col = 0; col < N_COLS; col++) {
-        const coord = new GridCoordinate({ row, col })
+        const coord = new GridCoordinate({ row, col });
         this.matrix.set(coord, null);
       }
     }
 
-    this.leftKeyPressed = false
+    this.leftKeyPressed = false;
     this.rightKeyPressed = false;
     this.rotateClockwiseKeyPressed = false;
     this.rotateCounterClockwiseKeyPressed = false;
 
-    window.addEventListener("keydown", this.handleKeyDown.bind(this));
-    window.addEventListener("keyup", this.handleKeyUp.bind(this));
+    window.addEventListener('keydown', this.handleKeyDown.bind(this));
+    window.addEventListener('keyup', this.handleKeyUp.bind(this));
   }
 
   start({ tick }: { tick: number }) {
@@ -79,8 +79,10 @@ export class Tetris {
   update(deltaTime: number) {
     this.lastTick += deltaTime;
 
-    const timeElapsedSinceLastLateralMovementKeyPressTick = this.lastTick - this.lastLateralMovementKeyPressTick;
-    if (timeElapsedSinceLastLateralMovementKeyPressTick >= 60) { // 60ms is the key press window
+    const timeElapsedSinceLastLateralMovementKeyPressTick =
+      this.lastTick - this.lastLateralMovementKeyPressTick;
+    if (timeElapsedSinceLastLateralMovementKeyPressTick >= 60) {
+      // 60ms is the key press window
       this.lastLateralMovementKeyPressTick = this.lastTick;
 
       // TODO -- if we are holding down both left and right -- how to handle
@@ -96,22 +98,31 @@ export class Tetris {
     // TODO
     // [ ] check if rotation is valid
     // [ ] kick matrix
-    const pressedRotateClockwiseAfterLastRotation = this.rotateClockwiseKeyPressedTime > this.lastRotationTick;
-    if (this.rotateClockwiseKeyPressed && pressedRotateClockwiseAfterLastRotation) {
+    const pressedRotateClockwiseAfterLastRotation =
+      this.rotateClockwiseKeyPressedTime > this.lastRotationTick;
+    if (
+      this.rotateClockwiseKeyPressed &&
+      pressedRotateClockwiseAfterLastRotation
+    ) {
       this.lastRotationTick = this.lastTick;
       this.currentPiece.rotateClockwise();
     }
 
-    const pressedRotateCounterClockwiseAfterLastRotation = this.rotateCounterClockwisePressedTime > this.lastRotationTick;
-    if (this.rotateCounterClockwiseKeyPressed && pressedRotateCounterClockwiseAfterLastRotation) {
+    const pressedRotateCounterClockwiseAfterLastRotation =
+      this.rotateCounterClockwisePressedTime > this.lastRotationTick;
+    if (
+      this.rotateCounterClockwiseKeyPressed &&
+      pressedRotateCounterClockwiseAfterLastRotation
+    ) {
       this.lastRotationTick = this.lastTick;
       this.currentPiece.rotateCounterClockwise();
     }
 
-    const timeElapsedSinceLastGravityTick = this.lastTick - this.lastGravityTick;
-    if (timeElapsedSinceLastGravityTick < this.levelThresholdInMs()) return
+    const timeElapsedSinceLastGravityTick =
+      this.lastTick - this.lastGravityTick;
+    if (timeElapsedSinceLastGravityTick < this.levelThresholdInMs()) return;
 
-    this.lastGravityTick = this.lastTick
+    this.lastGravityTick = this.lastTick;
 
     if (this.canMoveDown()) {
       this.currentPiece.moveDown();
@@ -122,15 +133,15 @@ export class Tetris {
       this.lastLockTick = this.lastTick;
 
       // end game state
-      if (this.currentPiece.coords.some(coord => coord.row < 0)) {
-        alert("Game Over");
+      if (this.currentPiece.coords.some((coord) => coord.row < 0)) {
+        alert('Game Over');
         this.stop();
         return;
       }
 
-      this.currentPiece.coords.forEach(coord => {
+      this.currentPiece.coords.forEach((coord) => {
         this.matrix.set(coord, this.currentPiece.COLOR);
-      })
+      });
       this.dropRrandomizePiece();
     }
   }
@@ -138,7 +149,7 @@ export class Tetris {
   draw() {
     for (let row = 0; row < N_ROWS; row++) {
       for (let col = 0; col < N_COLS; col++) {
-        this.clearRectangle(row, col)
+        this.clearRectangle(row, col);
       }
     }
 
@@ -155,9 +166,9 @@ export class Tetris {
   }
 
   private drawMatrix() {
-    this.ctx.strokeStyle = "grey";
+    this.ctx.strokeStyle = 'grey';
     this.ctx.lineWidth = 1;
-    this.ctx.beginPath()
+    this.ctx.beginPath();
 
     // column lines
     for (let i = 1; i < N_COLS; i++) {
@@ -170,11 +181,11 @@ export class Tetris {
 
     // row lines
     for (let j = 1; j < N_ROWS; j++) {
-      const y = (BOX_SIZE + 1) * j
+      const y = (BOX_SIZE + 1) * j;
       this.ctx.moveTo(0, y);
 
       const rightX = (BOX_SIZE + 1) * N_COLS;
-      this.ctx.lineTo(rightX, y)
+      this.ctx.lineTo(rightX, y);
     }
 
     this.ctx.stroke();
@@ -191,7 +202,7 @@ export class Tetris {
 
     const topLeftX = col * (BOX_SIZE + 1) + 1;
     const topLeftY = row * (BOX_SIZE + 1) + 1;
-    this.ctx.fillRect(topLeftX, topLeftY, BOX_SIZE, BOX_SIZE)
+    this.ctx.fillRect(topLeftX, topLeftY, BOX_SIZE, BOX_SIZE);
   }
 
   private clearRectangle(row: number, col: number) {
@@ -202,79 +213,81 @@ export class Tetris {
 
   private dropRrandomizePiece() {
     const randomIndex = Math.floor(Math.random() * ALL_TETRIMINOS.length);
-    this.currentPiece = new ALL_TETRIMINOS[randomIndex];
+    this.currentPiece = new ALL_TETRIMINOS[randomIndex]();
   }
 
   private canMoveDown(): boolean {
     const newPieceLocation = this.currentPiece.downOne();
 
-    const isBelowWall = newPieceLocation.some(coord => coord.row >= N_ROWS)
+    const isBelowWall = newPieceLocation.some((coord) => coord.row >= N_ROWS);
     if (isBelowWall) {
       return false;
     }
 
     // filter out the blocks that are above the field of play
-    return newPieceLocation.filter(coord => coord.row >= 0).every(coord => this.matrix.get(coord) === null);
+    return newPieceLocation
+      .filter((coord) => coord.row >= 0)
+      .every((coord) => this.matrix.get(coord) === null);
   }
 
   private canMoveLeft(): boolean {
     const newPieceLocation = this.currentPiece.leftOne();
 
-    const isLeftOfWall = newPieceLocation.some(coord => coord.col < 0);
+    const isLeftOfWall = newPieceLocation.some((coord) => coord.col < 0);
     if (isLeftOfWall) {
       return false;
     }
 
-    return newPieceLocation.every(coord => this.matrix.get(coord) === null)
+    return newPieceLocation.every((coord) => this.matrix.get(coord) === null);
   }
 
   private canMoveRight(): boolean {
     const newPieceLocation = this.currentPiece.rightOne();
 
-    const isRightOfWall = newPieceLocation.some(coord => coord.col >= N_COLS);
+    const isRightOfWall = newPieceLocation.some((coord) => coord.col >= N_COLS);
     if (isRightOfWall) {
       return false;
     }
 
-    return newPieceLocation.every(coord => this.matrix.get(coord) === null);
+    return newPieceLocation.every((coord) => this.matrix.get(coord) === null);
   }
 
   private handleKeyDown(e: KeyboardEvent) {
-    if (e.code === "ArrowLeft" && !this.leftKeyPressed) {
+    if (e.code === 'ArrowLeft' && !this.leftKeyPressed) {
       this.leftKeyPressedTime = performance.now();
       this.leftKeyPressed = true;
     }
 
-    if (e.code === "ArrowRight" && !this.rightKeyPressed) {
+    if (e.code === 'ArrowRight' && !this.rightKeyPressed) {
       this.rightKeyPressedTime = performance.now();
       this.rightKeyPressed = true;
     }
 
-    if (e.code === "KeyX" && !this.rotateClockwiseKeyPressed) {
+    if (e.code === 'KeyX' && !this.rotateClockwiseKeyPressed) {
       this.rotateClockwiseKeyPressedTime = performance.now();
       this.rotateClockwiseKeyPressed = true;
     }
 
-    if (e.code === "KeyZ" && !this.rotateCounterClockwiseKeyPressed) {
+    if (e.code === 'KeyZ' && !this.rotateCounterClockwiseKeyPressed) {
       this.rotateCounterClockwisePressedTime = performance.now();
       this.rotateCounterClockwiseKeyPressed = true;
     }
   }
 
   private handleKeyUp(e: KeyboardEvent) {
-    if (e.key === "ArrowLeft") {
+    if (e.key === 'ArrowLeft') {
       this.leftKeyPressed = false;
     }
 
-    if (e.key === "ArrowRight") {
+    if (e.key === 'ArrowRight') {
       this.rightKeyPressed = false;
     }
 
-    if (e.code === "KeyX") {
+    if (e.code === 'KeyX') {
       this.rotateClockwiseKeyPressed = false;
     }
 
-    if (e.code === "KeyZ") {
+    if (e.code === 'KeyZ') {
       this.rotateCounterClockwiseKeyPressed = false;
     }
   }

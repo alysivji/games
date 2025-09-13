@@ -28,6 +28,10 @@ export class Tetris {
   rightKeyPressed: boolean;
   rightKeyPressedTime: number;
 
+  lastDownwardMovementKeyPressTick: number;
+  downKeyPressed: boolean;
+  downKeyPressedTime: number;
+
   lastRotationTick: number;
 
   rotateClockwiseKeyPressed: boolean;
@@ -67,6 +71,7 @@ export class Tetris {
     this.lastGravityTick = tick;
     this.lastLateralMovementKeyPressTick = tick;
     this.lastRotationTick = tick;
+    this.lastDownwardMovementKeyPressTick = tick;
 
     this.dropRrandomizePiece();
     this.drawMatrix();
@@ -92,6 +97,16 @@ export class Tetris {
 
       if (this.rightKeyPressed && this.canMoveRight()) {
         this.currentPiece.moveRight();
+      }
+    }
+
+    const timeElapsedSinceLastDownward = this.lastTick - this.lastDownwardMovementKeyPressTick;
+    if (timeElapsedSinceLastDownward >= 30) {
+      this.lastDownwardMovementKeyPressTick = this.lastTick;
+
+      if (this.downKeyPressed && this.canMoveDown()) {
+        this.currentPiece.moveDown();
+        this.lastGravityTick = this.lastGravityTick;
       }
     }
 
@@ -123,7 +138,7 @@ export class Tetris {
     if (timeElapsedSinceLastGravityTick < this.levelThresholdInMs()) return;
 
     this.lastGravityTick = this.lastTick;
-
+    return;
     if (this.canMoveDown()) {
       this.currentPiece.moveDown();
     } else {
@@ -195,6 +210,15 @@ export class Tetris {
     for (const point of piece.coords) {
       this.drawRectangle(point.row, point.col, piece.COLOR);
     }
+    this.drawPivotRectangle(this.currentPiece.pivot.row, this.currentPiece.pivot.col, "#FFFFFF")
+  }
+
+  private drawPivotRectangle(row: number, col: number, color: string) {
+    this.ctx.fillStyle = color;
+
+    const topLeftX = col * (BOX_SIZE + 1) + 1;
+    const topLeftY = row * (BOX_SIZE + 1) + 1;
+    this.ctx.fillRect(topLeftX, topLeftY, 5, 5);
   }
 
   private drawRectangle(row: number, col: number, color: string) {
@@ -263,6 +287,11 @@ export class Tetris {
       this.rightKeyPressed = true;
     }
 
+    if (e.code === 'ArrowDown' && !this.downKeyPressed) {
+      this.downKeyPressedTime = performance.now();
+      this.downKeyPressed = true;
+    }
+
     if (e.code === 'KeyX' && !this.rotateClockwiseKeyPressed) {
       this.rotateClockwiseKeyPressedTime = performance.now();
       this.rotateClockwiseKeyPressed = true;
@@ -281,6 +310,10 @@ export class Tetris {
 
     if (e.key === 'ArrowRight') {
       this.rightKeyPressed = false;
+    }
+
+    if (e.key === 'ArrowDown') {
+      this.downKeyPressed = false;
     }
 
     if (e.code === 'KeyX') {

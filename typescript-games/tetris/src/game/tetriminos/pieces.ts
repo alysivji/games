@@ -87,7 +87,7 @@ export abstract class Tetrimino {
   }
 }
 
-class IPiece extends Tetrimino {
+export class IPiece extends Tetrimino {
   COLOR = '#00ffff';
   ROTATION_STRATEGY = new IPieceRotationStrategy(this);
   coords = [
@@ -98,7 +98,7 @@ class IPiece extends Tetrimino {
   ];
 }
 
-class OPiece extends Tetrimino {
+export class OPiece extends Tetrimino {
   COLOR = '#ffff00';
   ROTATION_STRATEGY = new OPieceRotationStrategy(this);
   coords = [
@@ -109,7 +109,7 @@ class OPiece extends Tetrimino {
   ];
 }
 
-class TPiece extends Tetrimino {
+export class TPiece extends Tetrimino {
   COLOR = '#800080';
   ROTATION_STRATEGY = new TSZJLPieceRotationStrategy(this);
   coords = [
@@ -120,7 +120,7 @@ class TPiece extends Tetrimino {
   ];
 }
 
-class SPiece extends Tetrimino {
+export class SPiece extends Tetrimino {
   COLOR = '#00ff00';
   ROTATION_STRATEGY = new TSZJLPieceRotationStrategy(this);
   coords = [
@@ -131,7 +131,7 @@ class SPiece extends Tetrimino {
   ];
 }
 
-class ZPiece extends Tetrimino {
+export class ZPiece extends Tetrimino {
   COLOR = '#ff0000';
   ROTATION_STRATEGY = new TSZJLPieceRotationStrategy(this);
   coords = [
@@ -142,7 +142,7 @@ class ZPiece extends Tetrimino {
   ];
 }
 
-class JPiece extends Tetrimino {
+export class JPiece extends Tetrimino {
   COLOR = '#0000ff';
   ROTATION_STRATEGY = new TSZJLPieceRotationStrategy(this);
   coords = [
@@ -153,7 +153,7 @@ class JPiece extends Tetrimino {
   ];
 }
 
-class LPiece extends Tetrimino {
+export class LPiece extends Tetrimino {
   COLOR = '#ff7f00';
   ROTATION_STRATEGY = new TSZJLPieceRotationStrategy(this);
   coords = [
@@ -163,13 +163,3 @@ class LPiece extends Tetrimino {
     new GridCoordinate({ col: 5, row: -1 }),
   ];
 }
-
-export const ALL_TETRIMINOS = [
-  IPiece,
-  JPiece,
-  LPiece,
-  OPiece,
-  SPiece,
-  TPiece,
-  ZPiece,
-];

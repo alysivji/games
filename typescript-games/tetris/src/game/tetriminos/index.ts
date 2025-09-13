@@ -1,3 +1,13 @@
-import { ALL_TETRIMINOS, Tetrimino } from './pieces';
+import { IPiece, JPiece, LPiece, OPiece, SPiece, Tetrimino, TPiece, ZPiece } from './pieces';
 
-export { ALL_TETRIMINOS, Tetrimino };
+export const ALL_TETRIMINOS = [
+  // IPiece,
+  // JPiece,
+  // LPiece,
+  // OPiece,
+  // SPiece,
+  // TPiece,
+  ZPiece,
+];
+
+export { Tetrimino };

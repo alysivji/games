@@ -32,13 +32,8 @@ export class Tetris {
   downKeyPressed: boolean;
   downKeyPressedTime: number;
 
-  lastRotationTick: number;
-
   rotateClockwiseKeyPressed: boolean;
-  rotateClockwiseKeyPressedTime: number;
-
   rotateCounterClockwiseKeyPressed: boolean;
-  rotateCounterClockwisePressedTime: number;
 
   constructor({ canvas }: { canvas: HTMLCanvasElement }) {
     canvas.width = N_COLS * (BOX_SIZE + 1);
@@ -70,7 +65,6 @@ export class Tetris {
     // TODO -- do we need to reset these when new pieces show up
     this.lastGravityTick = tick;
     this.lastLateralMovementKeyPressTick = tick;
-    this.lastRotationTick = tick;
     this.lastDownwardMovementKeyPressTick = tick;
 
     this.dropRrandomizePiece();
@@ -100,7 +94,8 @@ export class Tetris {
       }
     }
 
-    const timeElapsedSinceLastDownward = this.lastTick - this.lastDownwardMovementKeyPressTick;
+    const timeElapsedSinceLastDownward =
+      this.lastTick - this.lastDownwardMovementKeyPressTick;
     if (timeElapsedSinceLastDownward >= 30) {
       this.lastDownwardMovementKeyPressTick = this.lastTick;
 
@@ -113,24 +108,14 @@ export class Tetris {
     // TODO
     // [ ] check if rotation is valid
     // [ ] kick matrix
-    const pressedRotateClockwiseAfterLastRotation =
-      this.rotateClockwiseKeyPressedTime > this.lastRotationTick;
-    if (
-      this.rotateClockwiseKeyPressed &&
-      pressedRotateClockwiseAfterLastRotation
-    ) {
-      this.lastRotationTick = this.lastTick;
+    if (this.rotateClockwiseKeyPressed) {
       this.currentPiece.rotateClockwise();
+      this.rotateClockwiseKeyPressed = false;
     }
 
-    const pressedRotateCounterClockwiseAfterLastRotation =
-      this.rotateCounterClockwisePressedTime > this.lastRotationTick;
-    if (
-      this.rotateCounterClockwiseKeyPressed &&
-      pressedRotateCounterClockwiseAfterLastRotation
-    ) {
-      this.lastRotationTick = this.lastTick;
+    if (this.rotateCounterClockwiseKeyPressed) {
       this.currentPiece.rotateCounterClockwise();
+      this.rotateCounterClockwiseKeyPressed = false;
     }
 
     const timeElapsedSinceLastGravityTick =
@@ -138,7 +123,6 @@ export class Tetris {
     if (timeElapsedSinceLastGravityTick < this.levelThresholdInMs()) return;
 
     this.lastGravityTick = this.lastTick;
-    return;
     if (this.canMoveDown()) {
       this.currentPiece.moveDown();
     } else {
@@ -210,7 +194,11 @@ export class Tetris {
     for (const point of piece.coords) {
       this.drawRectangle(point.row, point.col, piece.COLOR);
     }
-    this.drawPivotRectangle(this.currentPiece.pivot.row, this.currentPiece.pivot.col, "#FFFFFF")
+    this.drawPivotRectangle(
+      this.currentPiece.pivot.row,
+      this.currentPiece.pivot.col,
+      '#FFFFFF'
+    );
   }
 
   private drawPivotRectangle(row: number, col: number, color: string) {
@@ -292,13 +280,11 @@ export class Tetris {
       this.downKeyPressed = true;
     }
 
-    if (e.code === 'KeyX' && !this.rotateClockwiseKeyPressed) {
-      this.rotateClockwiseKeyPressedTime = performance.now();
+    if (e.code === 'KeyX' && !e.repeat) {
       this.rotateClockwiseKeyPressed = true;
     }
 
-    if (e.code === 'KeyZ' && !this.rotateCounterClockwiseKeyPressed) {
-      this.rotateCounterClockwisePressedTime = performance.now();
+    if (e.code === 'KeyZ' && !e.repeat) {
       this.rotateCounterClockwiseKeyPressed = true;
     }
   }
@@ -314,14 +300,6 @@ export class Tetris {
 
     if (e.key === 'ArrowDown') {
       this.downKeyPressed = false;
-    }
-
-    if (e.code === 'KeyX') {
-      this.rotateClockwiseKeyPressed = false;
-    }
-
-    if (e.code === 'KeyZ') {
-      this.rotateCounterClockwiseKeyPressed = false;
     }
   }
 }

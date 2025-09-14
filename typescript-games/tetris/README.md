@@ -21,6 +21,13 @@
     - window.requestAnimationFrame
 - javaScript works best with events and callback function
 
+## Keyboard events
+
+- for rotation keys, we want to use `edge triggers`
+- for lateral and downward movement keys, we want to use `edge triggers` for first movement so it feels reponsive
+  - holding down lateral movement keys triggers DAS and ARR
+  - holding down down key should be constant speed vs getting faster by pressing down
+
 ## Resources
 
 - MDN: [Canvas Tutorial](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial)
@@ -69,3 +76,15 @@
 - [ ] hold piece
 - [ ] reach: gamepad API
 - [ ] collect stats for things like # rotations, # drops, pieces seen
+
+## Chat GPT suggestions
+
+- [ ] how to handle both left and right being pushed together
+- [ ] how to handle both rotates being pushed together
+- [ ] maybe use an edge trigger on left and right so it's more responsive
+
+## State Machine
+
+With XState, we can reduce a lot of the race conditions.
+
+Let's figure out how to move input into xstate and then we can build state machines for other things.

@@ -41,8 +41,6 @@ export class TSZJLPieceRotationStrategy extends BaseRotationStrategy {
         row: rotatedCoord.row + this.piece.pivot.row,
       });
     });
-
-    // go through all 5 transformations to see
     this.piece.coords = rotatedCoordinates;
   }
 

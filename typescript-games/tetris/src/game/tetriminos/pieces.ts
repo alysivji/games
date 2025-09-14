@@ -34,6 +34,10 @@ export abstract class Tetrimino {
   DIRECTION: ROTATION = ROTATION.NORTH;
   ROTATION_STRATEGY: BaseRotationStrategy;
 
+  isVisible() {
+    return this.coords.some((coord) => coord.row >= 0);
+  }
+
   downOne() {
     return this.coords.map(
       (coord) => new GridCoordinate({ row: coord.row + 1, col: coord.col })

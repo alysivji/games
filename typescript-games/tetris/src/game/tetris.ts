@@ -21,16 +21,11 @@ export class Tetris {
   stopGameLoop: number;
 
   lastLateralMovementKeyPressTick: number;
-
   leftKeyPressed: boolean;
-  leftKeyPressedTime: number;
-
   rightKeyPressed: boolean;
-  rightKeyPressedTime: number;
 
   lastDownwardMovementKeyPressTick: number;
   downKeyPressed: boolean;
-  downKeyPressedTime: number;
 
   rotateClockwiseKeyPressed: boolean;
   rotateCounterClockwiseKeyPressed: boolean;
@@ -96,13 +91,15 @@ export class Tetris {
 
     const timeElapsedSinceLastDownward =
       this.lastTick - this.lastDownwardMovementKeyPressTick;
-    if (timeElapsedSinceLastDownward >= 30) {
+    if (
+      this.downKeyPressed &&
+      this.canMoveDown() &&
+      this.currentPiece.isVisible() &&
+      timeElapsedSinceLastDownward >= 20
+    ) {
       this.lastDownwardMovementKeyPressTick = this.lastTick;
-
-      if (this.downKeyPressed && this.canMoveDown()) {
-        this.currentPiece.moveDown();
-        this.lastGravityTick = this.lastGravityTick;
-      }
+      this.currentPiece.moveDown();
+      this.lastGravityTick = this.lastGravityTick;
     }
 
     // TODO
@@ -265,18 +262,15 @@ export class Tetris {
   }
 
   private handleKeyDown(e: KeyboardEvent) {
-    if (e.code === 'ArrowLeft' && !this.leftKeyPressed) {
-      this.leftKeyPressedTime = performance.now();
+    if (e.code === 'ArrowLeft' && !e.repeat) {
       this.leftKeyPressed = true;
     }
 
-    if (e.code === 'ArrowRight' && !this.rightKeyPressed) {
-      this.rightKeyPressedTime = performance.now();
+    if (e.code === 'ArrowRight' && !e.repeat) {
       this.rightKeyPressed = true;
     }
 
-    if (e.code === 'ArrowDown' && !this.downKeyPressed) {
-      this.downKeyPressedTime = performance.now();
+    if (e.code === 'ArrowDown' && !e.repeat) {
       this.downKeyPressed = true;
     }
 

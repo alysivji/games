@@ -20,9 +20,45 @@ export class OPieceRotationStrategy extends BaseRotationStrategy {
 }
 
 export class IPieceRotationStrategy extends BaseRotationStrategy {
-  rotateClockwise() {}
+  rotateCounterClockwise() {
+    const rotatedCoordinates = this.piece.coords.map((coord) => {
+      const transposedCoord = new GridCoordinate({
+        col: coord.col - this.piece.pivot.col,
+        row: coord.row - this.piece.pivot.row,
+      });
+      const rotatedCoord = new GridCoordinate({
+        col: transposedCoord.row,
+        row: -transposedCoord.col,
+      });
+      return new GridCoordinate({
+        col: rotatedCoord.col + this.piece.pivot.col,
+        row: rotatedCoord.row + this.piece.pivot.row,
+      });
+    });
 
-  rotateCounterClockwise() {}
+    // go through all 5 transformations to see
+    this.piece.coords = rotatedCoordinates;
+  }
+
+  rotateClockwise() {
+    const rotatedCoordinates = this.piece.coords.map((coord) => {
+      const transposedCoord = new GridCoordinate({
+        col: coord.col - this.piece.pivot.col,
+        row: coord.row - this.piece.pivot.row,
+      });
+      const rotatedCoord = new GridCoordinate({
+        col: -transposedCoord.row,
+        row: transposedCoord.col,
+      });
+      return new GridCoordinate({
+        col: rotatedCoord.col + this.piece.pivot.col - 1,
+        row: rotatedCoord.row + this.piece.pivot.row,
+      });
+    });
+
+    // go through all 5 transformations to see
+    this.piece.coords = rotatedCoordinates;
+  }
 }
 
 export class TSZJLPieceRotationStrategy extends BaseRotationStrategy {
@@ -41,6 +77,8 @@ export class TSZJLPieceRotationStrategy extends BaseRotationStrategy {
         row: rotatedCoord.row + this.piece.pivot.row,
       });
     });
+
+    // go through all 5 transformations to see
     this.piece.coords = rotatedCoordinates;
   }
 

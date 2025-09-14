@@ -35,6 +35,7 @@ export abstract class Tetrimino {
   ROTATION_STRATEGY: BaseRotationStrategy;
 
   isVisible() {
+    // return true;
     return this.coords.some((coord) => coord.row >= 0);
   }
 
@@ -94,6 +95,7 @@ export abstract class Tetrimino {
 export class IPiece extends Tetrimino {
   COLOR = '#00ffff';
   ROTATION_STRATEGY = new IPieceRotationStrategy(this);
+  pivot = new GridCoordinate({ col: 5, row: 0 });
   coords = [
     new GridCoordinate({ col: 3, row: -1 }),
     new GridCoordinate({ col: 4, row: -1 }),
@@ -105,6 +107,7 @@ export class IPiece extends Tetrimino {
 export class OPiece extends Tetrimino {
   COLOR = '#ffff00';
   ROTATION_STRATEGY = new OPieceRotationStrategy(this);
+  pivot = new GridCoordinate({ col: 5, row: -1 });
   coords = [
     new GridCoordinate({ col: 4, row: -2 }),
     new GridCoordinate({ col: 5, row: -2 }),

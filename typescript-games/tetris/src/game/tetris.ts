@@ -118,7 +118,7 @@ export class Tetris {
     const timeElapsedSinceLastGravityTick =
       this.lastTick - this.lastGravityTick;
     if (timeElapsedSinceLastGravityTick < this.levelThresholdInMs()) return;
-
+    // return;
     this.lastGravityTick = this.lastTick;
     if (this.canMoveDown()) {
       this.currentPiece.moveDown();
@@ -191,19 +191,6 @@ export class Tetris {
     for (const point of piece.coords) {
       this.drawRectangle(point.row, point.col, piece.COLOR);
     }
-    this.drawPivotRectangle(
-      this.currentPiece.pivot.row,
-      this.currentPiece.pivot.col,
-      '#FFFFFF'
-    );
-  }
-
-  private drawPivotRectangle(row: number, col: number, color: string) {
-    this.ctx.fillStyle = color;
-
-    const topLeftX = col * (BOX_SIZE + 1) + 1;
-    const topLeftY = row * (BOX_SIZE + 1) + 1;
-    this.ctx.fillRect(topLeftX, topLeftY, 5, 5);
   }
 
   private drawRectangle(row: number, col: number, color: string) {

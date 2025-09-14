@@ -9,7 +9,7 @@ import {
   ZPiece,
 } from './pieces';
 
-export const ALL_TETRIMINOS = [
+export const ALL_TETRIMINOS: (typeof Tetrimino)[] = [
   IPiece,
   JPiece,
   LPiece,

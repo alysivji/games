@@ -1,5 +1,6 @@
 import { GridCoordinate, GridMap } from './grid';
-import { Tetrimino, ALL_TETRIMINOS } from './tetriminos';
+import { sevenBagRandomizer } from './randomizer';
+import { Tetrimino } from './tetriminos';
 
 const BOX_SIZE = 40;
 const N_COLS = 10;
@@ -12,6 +13,7 @@ export class Tetris {
   lastTick: number;
 
   matrix: GridMap;
+  randomizer = sevenBagRandomizer();
 
   currentPiece: Tetrimino;
   lastGravityTick: number;
@@ -35,7 +37,7 @@ export class Tetris {
     canvas.height = N_ROWS * (BOX_SIZE + 1);
     this.ctx = canvas.getContext('2d')!;
 
-    this.level = 1;
+    this.level = 8;
 
     this.matrix = new GridMap();
     for (let row = 0; row < N_ROWS; row++) {
@@ -208,8 +210,7 @@ export class Tetris {
   }
 
   private dropRrandomizePiece() {
-    const randomIndex = Math.floor(Math.random() * ALL_TETRIMINOS.length);
-    this.currentPiece = new ALL_TETRIMINOS[randomIndex]();
+    this.currentPiece = this.randomizer.next().value!;
   }
 
   private canMoveDown(): boolean {

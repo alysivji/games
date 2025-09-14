@@ -27,7 +27,7 @@ const COUNTER_CLOCKWISE_ROTATION_MAP = {
   [ROTATION.EAST]: ROTATION.NORTH,
 };
 
-export abstract class Tetrimino {
+export class Tetrimino {
   coords: GridCoordinate[];
   pivot = new GridCoordinate({ col: 4, row: -1 });
   COLOR: string;

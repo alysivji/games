@@ -45,6 +45,10 @@
   - [2009 Design Guidelines](https://archive.org/details/2009-tetris-variant-concepts_202201/2009%20Tetris%20Design%20Guideline/)
     - [Summary](https://tetris.fandom.com/wiki/Tetris_Guideline)
   - [Spawn location](https://harddrop.com/wiki/Spawn_Location)
+  - Piece Randomization
+    - Tetris Wiki: [https://tetris.wiki/Random_Generator]
+    - Blog: [The history of Tetris randomizers](https://simon.lc/the-history-of-tetris-randomizers) | [HackerNews discussion](https://news.ycombinator.com/item?id=20872110)
+    - Blog: [Is Tetris Biased?](https://babeheim.com/blog/2020-12-29-is-tetris-biased/)
 - Other Projects
   - [tetrigo](https://github.com/Broderick-Westrope/tetrigo)
 
@@ -62,20 +66,21 @@
   - [x] key press left and right
   - [ ] rotate
     - https://harddrop.com/wiki/SRS
-  - [ ] reach: move pieces down faster, drop pieces
+  - [ ] drop pieces
 - [ ] das / arr
   - https://tetris.wiki/DAS
   - https://tetrisconcept.net/threads/nes-tetris-das.3035/
 - [ ] clearing lines
   - keep score
 - [ ] ui -- ghost where the pieces ends up
-- [ ] 7 bag randomize piece
-- [ ] next queue
+- [x] 7 bag randomize piece
+- [ ] show next queue
   - [ ] next piece
   - [ ] next 5 pieces
 - [ ] hold piece
 - [ ] reach: gamepad API
 - [ ] collect stats for things like # rotations, # drops, pieces seen
+- [ ] https://harddrop.com/wiki/Nintendo_Rotation_System
 
 ## Chat GPT suggestions
 

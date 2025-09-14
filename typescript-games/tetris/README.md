@@ -64,14 +64,13 @@
   - spawn in level rows and figure out how to handle
 - [ ] controls
   - [x] key press left and right
-  - [ ] rotate
-    - https://harddrop.com/wiki/SRS
-  - [ ] drop pieces
+  - [x] rotate
+  - [ ] hard pieces
+- [ ] clearing lines
+  - keep score
 - [ ] das / arr
   - https://tetris.wiki/DAS
   - https://tetrisconcept.net/threads/nes-tetris-das.3035/
-- [ ] clearing lines
-  - keep score
 - [ ] ui -- ghost where the pieces ends up
 - [x] 7 bag randomize piece
 - [ ] show next queue

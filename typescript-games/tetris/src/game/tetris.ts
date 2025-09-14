@@ -108,12 +108,12 @@ export class Tetris {
     // [ ] check if rotation is valid
     // [ ] kick matrix
     if (this.rotateClockwiseKeyPressed) {
-      this.currentPiece.rotateClockwise();
+      this.currentPiece.rotateClockwise(this.matrix);
       this.rotateClockwiseKeyPressed = false;
     }
 
     if (this.rotateCounterClockwiseKeyPressed) {
-      this.currentPiece.rotateCounterClockwise();
+      this.currentPiece.rotateCounterClockwise(this.matrix);
       this.rotateCounterClockwiseKeyPressed = false;
     }
 
@@ -156,7 +156,7 @@ export class Tetris {
       this.drawRectangle(filledCoord.row, filledCoord.col, color);
     }
 
-    this.drawCurrentPiece(this.currentPiece);
+    this.drawCurrentPiece();
   }
 
   private levelThresholdInMs() {
@@ -189,9 +189,9 @@ export class Tetris {
     this.ctx.stroke();
   }
 
-  private drawCurrentPiece(piece) {
-    for (const point of piece.coords) {
-      this.drawRectangle(point.row, point.col, piece.COLOR);
+  private drawCurrentPiece() {
+    for (const point of this.currentPiece.coords) {
+      this.drawRectangle(point.row, point.col, this.currentPiece.COLOR);
     }
   }
 

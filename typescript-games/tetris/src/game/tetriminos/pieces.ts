@@ -1,38 +1,20 @@
-import { GridCoordinate } from '../grid';
+import { GridCoordinate, GridMap } from '../grid';
 import {
-  BaseRotationStrategy,
+  RotationStrategy,
   IPieceRotationStrategy,
   OPieceRotationStrategy,
-  TSZJLPieceRotationStrategy,
+  JLSTZPieceRotationStrategy,
+  ROTATION,
+  COUNTER_CLOCKWISE_ROTATION_MAP,
+  CLOCKWISE_ROTATION_MAP,
 } from './rotation';
-
-enum ROTATION {
-  NORTH,
-  EAST,
-  SOUTH,
-  WEST,
-}
-
-const CLOCKWISE_ROTATION_MAP = {
-  [ROTATION.NORTH]: ROTATION.EAST,
-  [ROTATION.EAST]: ROTATION.SOUTH,
-  [ROTATION.SOUTH]: ROTATION.WEST,
-  [ROTATION.WEST]: ROTATION.NORTH,
-};
-
-const COUNTER_CLOCKWISE_ROTATION_MAP = {
-  [ROTATION.NORTH]: ROTATION.WEST,
-  [ROTATION.WEST]: ROTATION.SOUTH,
-  [ROTATION.SOUTH]: ROTATION.EAST,
-  [ROTATION.EAST]: ROTATION.NORTH,
-};
 
 export class Tetrimino {
   coords: GridCoordinate[];
   pivot = new GridCoordinate({ col: 4, row: -1 });
   COLOR: string;
-  DIRECTION: ROTATION = ROTATION.NORTH;
-  ROTATION_STRATEGY: BaseRotationStrategy;
+  DIRECTION: ROTATION = ROTATION._0;
+  ROTATION_STRATEGY: RotationStrategy;
 
   isVisible() {
     // return true;
@@ -81,14 +63,12 @@ export class Tetrimino {
     this.coords = this.rightOne();
   }
 
-  rotateClockwise() {
-    this.DIRECTION = CLOCKWISE_ROTATION_MAP[this.DIRECTION];
-    this.ROTATION_STRATEGY.rotateClockwise();
+  rotateClockwise(matrix: GridMap) {
+    this.ROTATION_STRATEGY.rotateClockwise(matrix);
   }
 
-  rotateCounterClockwise() {
-    this.DIRECTION = COUNTER_CLOCKWISE_ROTATION_MAP[this.DIRECTION];
-    this.ROTATION_STRATEGY.rotateCounterClockwise();
+  rotateCounterClockwise(matrix: GridMap) {
+    this.ROTATION_STRATEGY.rotateCounterClockwise(matrix);
   }
 }
 
@@ -118,7 +98,7 @@ export class OPiece extends Tetrimino {
 
 export class TPiece extends Tetrimino {
   COLOR = '#800080';
-  ROTATION_STRATEGY = new TSZJLPieceRotationStrategy(this);
+  ROTATION_STRATEGY = new JLSTZPieceRotationStrategy(this);
   coords = [
     new GridCoordinate({ col: 4, row: -2 }),
     new GridCoordinate({ col: 3, row: -1 }),
@@ -129,7 +109,7 @@ export class TPiece extends Tetrimino {
 
 export class SPiece extends Tetrimino {
   COLOR = '#00ff00';
-  ROTATION_STRATEGY = new TSZJLPieceRotationStrategy(this);
+  ROTATION_STRATEGY = new JLSTZPieceRotationStrategy(this);
   coords = [
     new GridCoordinate({ col: 4, row: -2 }),
     new GridCoordinate({ col: 5, row: -2 }),
@@ -140,7 +120,7 @@ export class SPiece extends Tetrimino {
 
 export class ZPiece extends Tetrimino {
   COLOR = '#ff0000';
-  ROTATION_STRATEGY = new TSZJLPieceRotationStrategy(this);
+  ROTATION_STRATEGY = new JLSTZPieceRotationStrategy(this);
   coords = [
     new GridCoordinate({ col: 3, row: -2 }),
     new GridCoordinate({ col: 4, row: -2 }),
@@ -151,7 +131,7 @@ export class ZPiece extends Tetrimino {
 
 export class JPiece extends Tetrimino {
   COLOR = '#0000ff';
-  ROTATION_STRATEGY = new TSZJLPieceRotationStrategy(this);
+  ROTATION_STRATEGY = new JLSTZPieceRotationStrategy(this);
   coords = [
     new GridCoordinate({ col: 3, row: -2 }),
     new GridCoordinate({ col: 3, row: -1 }),
@@ -162,7 +142,7 @@ export class JPiece extends Tetrimino {
 
 export class LPiece extends Tetrimino {
   COLOR = '#ff7f00';
-  ROTATION_STRATEGY = new TSZJLPieceRotationStrategy(this);
+  ROTATION_STRATEGY = new JLSTZPieceRotationStrategy(this);
   coords = [
     new GridCoordinate({ col: 5, row: -2 }),
     new GridCoordinate({ col: 3, row: -1 }),

@@ -39,13 +39,7 @@ export class Tetris {
 
     this.level = 8;
 
-    this.matrix = new GridMap();
-    for (let row = 0; row < N_ROWS; row++) {
-      for (let col = 0; col < N_COLS; col++) {
-        const coord = new GridCoordinate({ row, col });
-        this.matrix.set(coord, null);
-      }
-    }
+    this.matrix = new GridMap({ numRows: N_ROWS, numCols: N_COLS });
 
     this.leftKeyPressed = false;
     this.rightKeyPressed = false;
@@ -130,7 +124,7 @@ export class Tetris {
       // we should let the piece slide around after it hits the bottom
       this.lastLockTick = this.lastTick;
 
-      // end game state
+      // check end game state
       if (this.currentPiece.coords.some((coord) => coord.row < 0)) {
         alert('Game Over');
         this.stop();
@@ -140,7 +134,40 @@ export class Tetris {
       this.currentPiece.coords.forEach((coord) => {
         this.matrix.set(coord, this.currentPiece.COLOR);
       });
+      this.clearLines();
       this.dropRrandomizePiece();
+    }
+  }
+
+  clearLines() {
+    const rowsToClear = this.matrix.rowsToClear;
+    let numLinesToShift = 0;
+
+    for (const rowToClear of rowsToClear) {
+      this.matrix.clearRow(rowToClear);
+      numLinesToShift++;
+
+      for (
+        let rowToShiftDown = rowToClear - 1;
+        rowToShiftDown >= 0;
+        rowToShiftDown--
+      ) {
+        if (rowsToClear.includes(rowToShiftDown)) break;
+
+        for (let col = 0; col < N_COLS; col++) {
+          const coordToShiftDown = new GridCoordinate({
+            row: rowToShiftDown,
+            col,
+          });
+          const coordRowBelow = new GridCoordinate({
+            row: rowToShiftDown + numLinesToShift,
+            col,
+          });
+
+          this.matrix.set(coordRowBelow, this.matrix.get(coordToShiftDown)!);
+          this.matrix.set(coordToShiftDown, null);
+        }
+      }
     }
   }
 

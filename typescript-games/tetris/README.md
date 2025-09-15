@@ -65,20 +65,21 @@
 - [ ] controls
   - [x] key press left and right
   - [x] rotate
-  - [ ] hard pieces
-- [ ] clearing lines
-  - keep score
+  - [ ] hard drop
+- [x] clearing lines
 - [ ] das / arr
   - https://tetris.wiki/DAS
   - https://tetrisconcept.net/threads/nes-tetris-das.3035/
 - [ ] ui -- ghost where the pieces ends up
+- [ ] slide piece before it locks
 - [x] 7 bag randomize piece
 - [ ] show next queue
   - [ ] next piece
   - [ ] next 5 pieces
 - [ ] hold piece
-- [ ] reach: gamepad API
+- [ ] score
 - [ ] collect stats for things like # rotations, # drops, pieces seen
+- [ ] reach: gamepad API
 - [ ] https://harddrop.com/wiki/Nintendo_Rotation_System
 
 ## Chat GPT suggestions

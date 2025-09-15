@@ -11,12 +11,12 @@ import {
 
 export const ALL_TETRIMINOS: (typeof Tetrimino)[] = [
   IPiece,
-  JPiece,
-  LPiece,
+  // JPiece,
+  // LPiece,
   OPiece,
-  SPiece,
-  TPiece,
-  ZPiece,
+  // SPiece,
+  // TPiece,
+  // ZPiece,
 ];
 
 export { Tetrimino };

@@ -5,8 +5,6 @@ import {
   OPieceRotationStrategy,
   JLSTZPieceRotationStrategy,
   ROTATION,
-  COUNTER_CLOCKWISE_ROTATION_MAP,
-  CLOCKWISE_ROTATION_MAP,
 } from './rotation';
 
 export class Tetrimino {

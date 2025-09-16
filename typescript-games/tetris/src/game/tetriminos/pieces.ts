@@ -14,12 +14,6 @@ export class Tetrimino {
   DIRECTION: ROTATION = ROTATION._0;
   ROTATION_STRATEGY: RotationStrategy;
 
-  // constructor() {
-  //   this.coords = this.coords!.map(
-  //     (coord) => new GridCoordinate({ row: coord.row, col: coord.col })
-  //   );
-  // }
-
   isVisible() {
     // return true;
     return this.coords.some((coord) => coord.row >= 0);

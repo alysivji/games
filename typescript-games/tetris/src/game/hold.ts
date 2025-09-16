@@ -1,15 +1,16 @@
 import { Tetrimino } from './tetriminos';
 
+type TetriminoConstructor = new () => Tetrimino;
+
 export class HoldManager {
-  private heldPiece: Tetrimino | null = null;
+  private heldPieceClass: TetriminoConstructor | null = null;
 
   holdPiece(piece: Tetrimino): Tetrimino | null {
-    const pieceToDrop = this.heldPiece;
+    const pieceClassToDrop = this.heldPieceClass;
 
-    // reset piece for next drop
-    // piece.coords = [...piece.initialCoords];
-    this.heldPiece = piece;
+    // Store the constructor
+    this.heldPieceClass = piece.constructor as TetriminoConstructor;
 
-    return pieceToDrop;
+    return pieceClassToDrop ? new pieceClassToDrop() : null;
   }
 }

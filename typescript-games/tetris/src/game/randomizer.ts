@@ -18,7 +18,7 @@ export function* sevenBagRandomizer() {
       queue.push(...shuffledBag);
     }
 
-    const TetriminoClass = queue.pop()!;
+    const TetriminoClass = queue.shift()!;
     yield new TetriminoClass();
   }
 }

@@ -10,12 +10,12 @@ export class PieceQueue {
   ctx: CanvasRenderingContext2D;
 
   private elements: Tetrimino[] = [];
-  private randomizer: () => Generator<Tetrimino, void, unknown>;
+  private randomizePiece: Generator<Tetrimino, void, unknown>;
 
   constructor({ size, randomizer, nextPieceCanvas }: PieceQueueProps) {
     this.ctx = nextPieceCanvas.getContext('2d')!;
 
-    this.randomizer = randomizer;
+    this.randomizePiece = randomizer();
 
     // Create size + 1 pieces so after first dequeue we still have 'size' pieces to show
     for (let i = 0; i < size + 1; i++) {
@@ -68,6 +68,6 @@ export class PieceQueue {
   }
 
   private selectRandomTetromino() {
-    return this.randomizer().next().value!;
+    return this.randomizePiece.next().value!;
   }
 }

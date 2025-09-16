@@ -1,4 +1,5 @@
 import { GridCoordinate, GridMap } from './grid';
+import { PieceQueue } from './queue';
 import { sevenBagRandomizer } from './randomizer';
 import { Tetrimino } from './tetriminos';
 
@@ -6,14 +7,20 @@ const BOX_SIZE = 40;
 const N_COLS = 10;
 const N_ROWS = 20;
 
+type TetrisProps = {
+  tetrisCanvas: HTMLCanvasElement;
+  holdPieceCanvas: HTMLCanvasElement;
+  nextPieceCanvas: HTMLCanvasElement;
+};
+
 export class Tetris {
-  ctx: CanvasRenderingContext2D;
+  tetrisCanvasCtx: CanvasRenderingContext2D;
 
   level: number;
   lastTick: number;
 
   matrix: GridMap;
-  randomizer = sevenBagRandomizer();
+  pieceQueue: PieceQueue;
 
   currentPiece: Tetrimino;
   lastGravityTick: number;
@@ -32,14 +39,18 @@ export class Tetris {
   rotateClockwiseKeyPressed: boolean;
   rotateCounterClockwiseKeyPressed: boolean;
 
-  constructor({ canvas }: { canvas: HTMLCanvasElement }) {
-    canvas.width = N_COLS * (BOX_SIZE + 1);
-    canvas.height = N_ROWS * (BOX_SIZE + 1);
-    this.ctx = canvas.getContext('2d')!;
+  constructor({ tetrisCanvas }: TetrisProps) {
+    tetrisCanvas.width = N_COLS * (BOX_SIZE + 1);
+    tetrisCanvas.height = N_ROWS * (BOX_SIZE + 1);
+    this.tetrisCanvasCtx = tetrisCanvas.getContext('2d')!;
 
     this.level = 8;
 
     this.matrix = new GridMap({ numRows: N_ROWS, numCols: N_COLS });
+    this.pieceQueue = new PieceQueue({
+      size: 5,
+      randomizer: sevenBagRandomizer,
+    });
 
     this.leftKeyPressed = false;
     this.rightKeyPressed = false;
@@ -58,7 +69,7 @@ export class Tetris {
     this.lastLateralMovementKeyPressTick = tick;
     this.lastDownwardMovementKeyPressTick = tick;
 
-    this.dropRrandomizePiece();
+    this.currentPiece = this.pieceQueue.dequeue();
     this.drawMatrix();
   }
 
@@ -135,7 +146,7 @@ export class Tetris {
         this.matrix.set(coord, this.currentPiece.COLOR);
       });
       this.clearLines();
-      this.dropRrandomizePiece();
+      this.currentPiece = this.pieceQueue.dequeue();
     }
   }
 
@@ -191,29 +202,29 @@ export class Tetris {
   }
 
   private drawMatrix() {
-    this.ctx.strokeStyle = 'grey';
-    this.ctx.lineWidth = 1;
-    this.ctx.beginPath();
+    this.tetrisCanvasCtx.strokeStyle = 'grey';
+    this.tetrisCanvasCtx.lineWidth = 1;
+    this.tetrisCanvasCtx.beginPath();
 
     // column lines
     for (let i = 1; i < N_COLS; i++) {
       const x = (BOX_SIZE + 1) * i;
-      this.ctx.moveTo(x, 0);
+      this.tetrisCanvasCtx.moveTo(x, 0);
 
       const bottomY = (BOX_SIZE + 1) * N_ROWS;
-      this.ctx.lineTo(x, bottomY);
+      this.tetrisCanvasCtx.lineTo(x, bottomY);
     }
 
     // row lines
     for (let j = 1; j < N_ROWS; j++) {
       const y = (BOX_SIZE + 1) * j;
-      this.ctx.moveTo(0, y);
+      this.tetrisCanvasCtx.moveTo(0, y);
 
       const rightX = (BOX_SIZE + 1) * N_COLS;
-      this.ctx.lineTo(rightX, y);
+      this.tetrisCanvasCtx.lineTo(rightX, y);
     }
 
-    this.ctx.stroke();
+    this.tetrisCanvasCtx.stroke();
   }
 
   private drawCurrentPiece() {
@@ -223,21 +234,17 @@ export class Tetris {
   }
 
   private drawRectangle(row: number, col: number, color: string) {
-    this.ctx.fillStyle = color;
+    this.tetrisCanvasCtx.fillStyle = color;
 
     const topLeftX = col * (BOX_SIZE + 1) + 1;
     const topLeftY = row * (BOX_SIZE + 1) + 1;
-    this.ctx.fillRect(topLeftX, topLeftY, BOX_SIZE, BOX_SIZE);
+    this.tetrisCanvasCtx.fillRect(topLeftX, topLeftY, BOX_SIZE, BOX_SIZE);
   }
 
   private clearRectangle(row: number, col: number) {
     const topLeftX = col * (BOX_SIZE + 1) + 1;
     const topLeftY = row * (BOX_SIZE + 1) + 1;
-    this.ctx.clearRect(topLeftX, topLeftY, BOX_SIZE, BOX_SIZE);
-  }
-
-  private dropRrandomizePiece() {
-    this.currentPiece = this.randomizer.next().value!;
+    this.tetrisCanvasCtx.clearRect(topLeftX, topLeftY, BOX_SIZE, BOX_SIZE);
   }
 
   private canMoveDown(): boolean {

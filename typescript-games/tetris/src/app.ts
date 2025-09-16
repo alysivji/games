@@ -1,7 +1,9 @@
 import { Tetris } from './game';
 
-const canvas = document.querySelector<HTMLCanvasElement>('#tetris')!;
-const tetris = new Tetris({ canvas });
+const tetrisCanvas = document.querySelector<HTMLCanvasElement>('#tetris')!;
+const holdPieceCanvas = document.querySelector<HTMLCanvasElement>('#hold')!;
+const nextPieceCanvas = document.querySelector<HTMLCanvasElement>('#next')!;
+const tetris = new Tetris({ tetrisCanvas, holdPieceCanvas, nextPieceCanvas });
 
 (() => {
   function gameLoop(currentTime: number) {

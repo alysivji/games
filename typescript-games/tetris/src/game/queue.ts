@@ -17,12 +17,11 @@ export class PieceQueue {
 
     this.randomizePiece = randomizer();
 
-    // Create size + 1 pieces so after first dequeue we still have 'size' pieces to show
-    for (let i = 0; i < size + 1; i++) {
+    for (let i = 0; i < size; i++) {
       this.elements.push(this.selectRandomTetromino());
     }
 
-    this.draw(); // Show all pieces initially
+    this.draw();
   }
 
   dequeue() {

@@ -1,4 +1,5 @@
 import { GridCoordinate, GridMap } from './grid';
+import { HoldManager } from './hold';
 import { PieceQueue } from './queue';
 import { sevenBagRandomizer } from './randomizer';
 import { Tetrimino } from './tetriminos';
@@ -23,6 +24,7 @@ export class Tetris {
 
   matrix: GridMap;
   pieceQueue: PieceQueue;
+  holdManager: HoldManager;
 
   currentPiece: Tetrimino;
   lastGravityTick: number;
@@ -32,14 +34,16 @@ export class Tetris {
   stopGameLoop: number;
 
   lastLateralMovementKeyPressTick: number;
-  leftKeyPressed: boolean;
-  rightKeyPressed: boolean;
+  leftKeyPressed: boolean = false;
+  rightKeyPressed: boolean = false;
 
   lastDownwardMovementKeyPressTick: number;
-  downKeyPressed: boolean;
+  downKeyPressed: boolean = false;
 
-  rotateClockwiseKeyPressed: boolean;
-  rotateCounterClockwiseKeyPressed: boolean;
+  rotateClockwiseKeyPressed: boolean = false;
+  rotateCounterClockwiseKeyPressed: boolean = false;
+
+  holdPieceKeyPressed: boolean = false;
 
   constructor({ tetrisCanvas, nextPieceCanvas }: TetrisProps) {
     tetrisCanvas.width = N_COLS * STEP;
@@ -56,11 +60,7 @@ export class Tetris {
       randomizer: sevenBagRandomizer,
       nextPieceCanvas,
     });
-
-    this.leftKeyPressed = false;
-    this.rightKeyPressed = false;
-    this.rotateClockwiseKeyPressed = false;
-    this.rotateCounterClockwiseKeyPressed = false;
+    this.holdManager = new HoldManager();
 
     window.addEventListener('keydown', this.handleKeyDown.bind(this));
     window.addEventListener('keyup', this.handleKeyUp.bind(this));
@@ -83,6 +83,30 @@ export class Tetris {
   }
 
   update(deltaTime: number) {
+    // edge triggered controls -- rotation + hold
+    if (this.holdPieceKeyPressed) {
+      const pieceFromHold = this.holdManager.holdPiece(this.currentPiece);
+      if (pieceFromHold) {
+        this.currentPiece = pieceFromHold;
+      } else {
+        this.currentPiece = this.pieceQueue.dequeue();
+      }
+
+      this.holdPieceKeyPressed = false;
+      return;
+    }
+
+    if (this.rotateClockwiseKeyPressed) {
+      this.currentPiece.rotateClockwise(this.matrix);
+      this.rotateClockwiseKeyPressed = false;
+    }
+
+    if (this.rotateCounterClockwiseKeyPressed) {
+      this.currentPiece.rotateCounterClockwise(this.matrix);
+      this.rotateCounterClockwiseKeyPressed = false;
+    }
+
+    // lateral movement + soft drop
     this.lastTick += deltaTime;
 
     const timeElapsedSinceLastLateralMovementKeyPressTick =
@@ -114,19 +138,7 @@ export class Tetris {
       this.lastGravityTick = this.lastGravityTick;
     }
 
-    // TODO
-    // [ ] check if rotation is valid
-    // [ ] kick matrix
-    if (this.rotateClockwiseKeyPressed) {
-      this.currentPiece.rotateClockwise(this.matrix);
-      this.rotateClockwiseKeyPressed = false;
-    }
-
-    if (this.rotateCounterClockwiseKeyPressed) {
-      this.currentPiece.rotateCounterClockwise(this.matrix);
-      this.rotateCounterClockwiseKeyPressed = false;
-    }
-
+    // gravity
     const timeElapsedSinceLastGravityTick =
       this.lastTick - this.lastGravityTick;
     if (timeElapsedSinceLastGravityTick < this.levelThresholdInMs()) return;
@@ -304,6 +316,10 @@ export class Tetris {
 
     if (e.code === 'KeyZ' && !e.repeat) {
       this.rotateCounterClockwiseKeyPressed = true;
+    }
+
+    if (e.code === 'KeyC' && !e.repeat) {
+      this.holdPieceKeyPressed = true;
     }
   }
 

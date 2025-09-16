@@ -1,17 +1,78 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tetris</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
 
-  <body>
-    <canvas id="tetris">
-      Requires browser that supports Canvas element.
-    </canvas>
-  </body>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tetris</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
 
-  <script type="module" src="app.ts" />
+<body>
+  <div class="game-shell">
+    <!-- LEFT: HOLD -->
+    <aside class="panel">
+      <h2 class="panel-title">Hold</h2>
+      <!-- 4x4 grid at 32px per cell => 128x128 -->
+      <canvas id="hold" width="128" height="128" aria-label="Hold piece"></canvas>
+    </aside>
+
+    <!-- CENTER: BOARD + HUD -->
+    <main class="center">
+      <header class="hud">
+        <div class="stat">
+          <span>Score</span>
+          <strong id="score">0</strong>
+        </div>
+        <div class="stat">
+          <span>Level</span>
+          <strong id="level">1</strong>
+        </div>
+        <div class="stat">
+          <span>Lines</span>
+          <strong id="lines">0</strong>
+        </div>
+      </header>
+
+      <div class="stage">
+        <!-- 10x20 at 30px per cell => 300x600 (set via attributes!) -->
+        <canvas id="tetris" width="300" height="600">
+          Requires a browser that supports the Canvas element.
+        </canvas>
+      </div>
+
+      <footer class="controls legend">
+        <span class="item">
+          <kbd>←</kbd><kbd>→</kbd> <em>Move</em>
+        </span>
+        <span class="item">
+          <kbd>↓</kbd> <em>Soft Drop</em>
+        </span>
+        <span class="item">
+          <kbd>Space</kbd> <em>Hard Drop</em>
+        </span>
+        <span class="item">
+          <kbd>Z</kbd> <em>Rotate CCW</em>
+        </span>
+        <span class="item">
+          <kbd>X</kbd> <em>Rotate CW</em>
+        </span>
+        <span class="item">
+          <kbd>Shift</kbd>/<kbd>C</kbd> <em>Hold</em>
+        </span>
+      </footer>
+
+    </main>
+
+    <!-- RIGHT: NEXT QUEUE -->
+    <aside class="panel">
+      <h2 class="panel-title">Next</h2>
+      <!-- 4 columns; tall enough for ~5 previews (each fits 4x4) -->
+      <canvas id="next" width="128" height="400" aria-label="Next queue"></canvas>
+    </aside>
+  </div>
+
+  <script type="module" src="app.ts"></script>
+</body>
+
 </html>

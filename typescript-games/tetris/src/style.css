@@ -124,12 +124,6 @@ canvas {
 #tetris {
   width: calc(var(--cols) * var(--cell));
   height: calc(var(--rows) * var(--cell));
-
-  /* Optional faint grid to make it feel like a playfield even before drawing */
-  background-image:
-    linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
-  background-size: var(--cell) var(--cell);
 }
 
 /* HOLD & NEXT look consistent, just narrower */

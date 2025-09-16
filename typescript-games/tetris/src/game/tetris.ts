@@ -42,8 +42,8 @@ export class Tetris {
   rotateCounterClockwiseKeyPressed: boolean;
 
   constructor({ tetrisCanvas, nextPieceCanvas }: TetrisProps) {
-    tetrisCanvas.width = N_COLS * (BOX_SIZE + 1);
-    tetrisCanvas.height = N_ROWS * (BOX_SIZE + 1);
+    tetrisCanvas.width = N_COLS * STEP;
+    tetrisCanvas.height = N_ROWS * STEP;
     this.ctx = tetrisCanvas.getContext('2d')!;
 
     tetrisCanvas;
@@ -207,24 +207,25 @@ export class Tetris {
   }
 
   private drawMatrix() {
-    this.ctx.strokeStyle = 'grey';
+    this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
     this.ctx.lineWidth = 1;
+
+    // Draw vertical lines
     this.ctx.beginPath();
-
-    // column lines
     for (let i = 1; i < N_COLS; i++) {
-      const x = i * STEP + 0.5;
+      const x = Math.floor(i * STEP) + 0.5;
       this.ctx.moveTo(x, 0);
-      this.ctx.lineTo(x, STEP * N_ROWS + 0.5);
+      this.ctx.lineTo(x, N_ROWS * STEP);
     }
+    this.ctx.stroke();
 
-    // row lines
+    // Draw horizontal lines
+    this.ctx.beginPath();
     for (let j = 1; j < N_ROWS; j++) {
-      const y = j * STEP + 0.5;
+      const y = Math.floor(j * STEP) + 0.5;
       this.ctx.moveTo(0, y);
-      this.ctx.lineTo(STEP * N_COLS + 0.5, y);
+      this.ctx.lineTo(N_COLS * STEP, y);
     }
-
     this.ctx.stroke();
   }
 
@@ -237,14 +238,14 @@ export class Tetris {
   private drawRectangle(row: number, col: number, color: string) {
     this.ctx.fillStyle = color;
 
-    const topLeftX = col * (BOX_SIZE + 1) + 1;
-    const topLeftY = row * (BOX_SIZE + 1) + 1;
+    const topLeftX = col * STEP + 1;
+    const topLeftY = row * STEP + 1;
     this.ctx.fillRect(topLeftX, topLeftY, BOX_SIZE, BOX_SIZE);
   }
 
   private clearRectangle(row: number, col: number) {
-    const topLeftX = col * (BOX_SIZE + 1) + 1;
-    const topLeftY = row * (BOX_SIZE + 1) + 1;
+    const topLeftX = col * STEP + 1;
+    const topLeftY = row * STEP + 1;
     this.ctx.clearRect(topLeftX, topLeftY, BOX_SIZE, BOX_SIZE);
   }
 

@@ -16,7 +16,7 @@ type TetrisProps = {
 };
 
 export class Tetris {
-  tetrisCanvasCtx: CanvasRenderingContext2D;
+  ctx: CanvasRenderingContext2D;
 
   level: number;
   lastTick: number;
@@ -41,10 +41,10 @@ export class Tetris {
   rotateClockwiseKeyPressed: boolean;
   rotateCounterClockwiseKeyPressed: boolean;
 
-  constructor({ tetrisCanvas }: TetrisProps) {
+  constructor({ tetrisCanvas, nextPieceCanvas }: TetrisProps) {
     tetrisCanvas.width = N_COLS * (BOX_SIZE + 1);
     tetrisCanvas.height = N_ROWS * (BOX_SIZE + 1);
-    this.tetrisCanvasCtx = tetrisCanvas.getContext('2d')!;
+    this.ctx = tetrisCanvas.getContext('2d')!;
 
     tetrisCanvas;
 
@@ -54,6 +54,7 @@ export class Tetris {
     this.pieceQueue = new PieceQueue({
       size: 5,
       randomizer: sevenBagRandomizer,
+      nextPieceCanvas,
     });
 
     this.leftKeyPressed = false;
@@ -154,7 +155,22 @@ export class Tetris {
     }
   }
 
-  clearLines() {
+  draw() {
+    for (let row = 0; row < N_ROWS; row++) {
+      for (let col = 0; col < N_COLS; col++) {
+        this.clearRectangle(row, col);
+      }
+    }
+
+    for (const filledCoord of this.matrix.filledCoordinates) {
+      const color = this.matrix.get(filledCoord)!;
+      this.drawRectangle(filledCoord.row, filledCoord.col, color);
+    }
+
+    this.drawCurrentPiece();
+  }
+
+  private clearLines() {
     const rowsToClear = this.matrix.rowsToClear;
     let numLinesToShift = 0;
 
@@ -186,45 +202,30 @@ export class Tetris {
     }
   }
 
-  draw() {
-    for (let row = 0; row < N_ROWS; row++) {
-      for (let col = 0; col < N_COLS; col++) {
-        this.clearRectangle(row, col);
-      }
-    }
-
-    for (const filledCoord of this.matrix.filledCoordinates) {
-      const color = this.matrix.get(filledCoord)!;
-      this.drawRectangle(filledCoord.row, filledCoord.col, color);
-    }
-
-    this.drawCurrentPiece();
-  }
-
   private levelThresholdInMs() {
     return 1000 - (this.level - 1) * 100;
   }
 
   private drawMatrix() {
-    this.tetrisCanvasCtx.strokeStyle = 'grey';
-    this.tetrisCanvasCtx.lineWidth = 1;
-    this.tetrisCanvasCtx.beginPath();
+    this.ctx.strokeStyle = 'grey';
+    this.ctx.lineWidth = 1;
+    this.ctx.beginPath();
 
     // column lines
     for (let i = 1; i < N_COLS; i++) {
       const x = i * STEP + 0.5;
-      this.tetrisCanvasCtx.moveTo(x, 0);
-      this.tetrisCanvasCtx.lineTo(x, STEP * N_ROWS + 0.5);
+      this.ctx.moveTo(x, 0);
+      this.ctx.lineTo(x, STEP * N_ROWS + 0.5);
     }
 
     // row lines
     for (let j = 1; j < N_ROWS; j++) {
       const y = j * STEP + 0.5;
-      this.tetrisCanvasCtx.moveTo(0, y);
-      this.tetrisCanvasCtx.lineTo(STEP * N_COLS + 0.5, y);
+      this.ctx.moveTo(0, y);
+      this.ctx.lineTo(STEP * N_COLS + 0.5, y);
     }
 
-    this.tetrisCanvasCtx.stroke();
+    this.ctx.stroke();
   }
 
   private drawCurrentPiece() {
@@ -234,17 +235,17 @@ export class Tetris {
   }
 
   private drawRectangle(row: number, col: number, color: string) {
-    this.tetrisCanvasCtx.fillStyle = color;
+    this.ctx.fillStyle = color;
 
     const topLeftX = col * (BOX_SIZE + 1) + 1;
     const topLeftY = row * (BOX_SIZE + 1) + 1;
-    this.tetrisCanvasCtx.fillRect(topLeftX, topLeftY, BOX_SIZE, BOX_SIZE);
+    this.ctx.fillRect(topLeftX, topLeftY, BOX_SIZE, BOX_SIZE);
   }
 
   private clearRectangle(row: number, col: number) {
     const topLeftX = col * (BOX_SIZE + 1) + 1;
     const topLeftY = row * (BOX_SIZE + 1) + 1;
-    this.tetrisCanvasCtx.clearRect(topLeftX, topLeftY, BOX_SIZE, BOX_SIZE);
+    this.ctx.clearRect(topLeftX, topLeftY, BOX_SIZE, BOX_SIZE);
   }
 
   private canMoveDown(): boolean {

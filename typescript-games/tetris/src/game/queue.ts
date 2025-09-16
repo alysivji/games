@@ -68,7 +68,7 @@ export class PieceQueue {
         const y = offsetY + (coord.row - minRow) * blockSize;
 
         this.ctx.fillStyle = tetrimino.COLOR;
-        this.ctx.fillRect(x, y, blockSize - 1, blockSize - 1); // -1 for small gap between blocks
+        this.ctx.fillRect(x + 1, y + 1, blockSize - 0.5, blockSize - 0.5); // 1px gap like main board
       });
     });
   }

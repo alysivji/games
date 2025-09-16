@@ -3,7 +3,9 @@ import { PieceQueue } from './queue';
 import { sevenBagRandomizer } from './randomizer';
 import { Tetrimino } from './tetriminos';
 
-const BOX_SIZE = 40;
+const STEP = 30; // visual cell step (matches CSS --cell)
+const GAP = 1; // 1px between cells
+const BOX_SIZE = STEP - GAP;
 const N_COLS = 10;
 const N_ROWS = 20;
 
@@ -43,6 +45,8 @@ export class Tetris {
     tetrisCanvas.width = N_COLS * (BOX_SIZE + 1);
     tetrisCanvas.height = N_ROWS * (BOX_SIZE + 1);
     this.tetrisCanvasCtx = tetrisCanvas.getContext('2d')!;
+
+    tetrisCanvas;
 
     this.level = 8;
 
@@ -208,20 +212,16 @@ export class Tetris {
 
     // column lines
     for (let i = 1; i < N_COLS; i++) {
-      const x = (BOX_SIZE + 1) * i;
+      const x = i * STEP + 0.5;
       this.tetrisCanvasCtx.moveTo(x, 0);
-
-      const bottomY = (BOX_SIZE + 1) * N_ROWS;
-      this.tetrisCanvasCtx.lineTo(x, bottomY);
+      this.tetrisCanvasCtx.lineTo(x, STEP * N_ROWS + 0.5);
     }
 
     // row lines
     for (let j = 1; j < N_ROWS; j++) {
-      const y = (BOX_SIZE + 1) * j;
+      const y = j * STEP + 0.5;
       this.tetrisCanvasCtx.moveTo(0, y);
-
-      const rightX = (BOX_SIZE + 1) * N_COLS;
-      this.tetrisCanvasCtx.lineTo(rightX, y);
+      this.tetrisCanvasCtx.lineTo(STEP * N_COLS + 0.5, y);
     }
 
     this.tetrisCanvasCtx.stroke();

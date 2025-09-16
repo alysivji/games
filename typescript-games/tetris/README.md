@@ -68,16 +68,16 @@
   - [x] rotate
   - [ ] hard drop
 - [x] clearing lines
+- [x] 7 bag randomize piece
+- [x] show next queue
+  - [x] next piece
+  - [x] next 5 pieces
+- [ ] hold piece
+- [ ] ui -- ghost where the pieces ends up
 - [ ] das / arr
   - https://tetris.wiki/DAS
   - https://tetrisconcept.net/threads/nes-tetris-das.3035/
-- [ ] ui -- ghost where the pieces ends up
 - [ ] slide piece before it locks
-- [x] 7 bag randomize piece
-- [ ] show next queue
-  - [ ] next piece
-  - [ ] next 5 pieces
-- [ ] hold piece
 - [ ] score
 - [ ] collect stats for things like # rotations, # drops, pieces seen
 - [ ] reach: gamepad API

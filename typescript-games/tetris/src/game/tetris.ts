@@ -45,7 +45,7 @@ export class Tetris {
 
   holdPieceKeyPressed: boolean = false;
 
-  constructor({ tetrisCanvas, nextPieceCanvas }: TetrisProps) {
+  constructor({ tetrisCanvas, holdPieceCanvas, nextPieceCanvas }: TetrisProps) {
     tetrisCanvas.width = N_COLS * STEP;
     tetrisCanvas.height = N_ROWS * STEP;
     this.ctx = tetrisCanvas.getContext('2d')!;
@@ -60,7 +60,7 @@ export class Tetris {
       randomizer: sevenBagRandomizer,
       nextPieceCanvas,
     });
-    this.holdManager = new HoldManager();
+    this.holdManager = new HoldManager(holdPieceCanvas);
 
     window.addEventListener('keydown', this.handleKeyDown.bind(this));
     window.addEventListener('keyup', this.handleKeyUp.bind(this));
@@ -91,6 +91,8 @@ export class Tetris {
       } else {
         this.currentPiece = this.pieceQueue.dequeue();
       }
+
+      this.holdManager.draw();
 
       this.holdPieceKeyPressed = false;
       return;

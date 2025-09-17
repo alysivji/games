@@ -72,16 +72,16 @@
 - [x] show next queue
   - [x] next piece
   - [x] next 5 pieces
-- [ ] hold piece
+- [x] hold piece
 - [ ] ui -- ghost where the pieces ends up
 - [ ] das / arr
   - https://tetris.wiki/DAS
   - https://tetrisconcept.net/threads/nes-tetris-das.3035/
 - [ ] slide piece before it locks
 - [ ] score
-- [ ] collect stats for things like # rotations, # drops, pieces seen
 - [ ] reach: gamepad API
 - [ ] https://harddrop.com/wiki/Nintendo_Rotation_System
+- [ ] collect stats for things like # rotations, # drops, pieces seen
 
 ## Chat GPT suggestions
 

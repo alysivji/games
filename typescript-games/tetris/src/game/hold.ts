@@ -3,7 +3,7 @@ import { Tetrimino } from './tetriminos';
 type TetriminoConstructor = new () => Tetrimino;
 
 export class HoldManager {
-  private heldPieceClass: TetriminoConstructor | null = null;
+  private heldPiece: Tetrimino | null = null;
   private ctx: CanvasRenderingContext2D;
 
   constructor(holdCanvas: HTMLCanvasElement) {
@@ -11,18 +11,19 @@ export class HoldManager {
   }
 
   holdPiece(piece: Tetrimino): Tetrimino | null {
-    const pieceClassToDrop = this.heldPieceClass;
+    const pieceToDrop = this.heldPiece;
 
     // Store the constructor
-    this.heldPieceClass = piece.constructor as TetriminoConstructor;
+    const tetriminoClass = piece.constructor as TetriminoConstructor;
+    this.heldPiece = new tetriminoClass();
 
-    return pieceClassToDrop ? new pieceClassToDrop() : null;
+    return pieceToDrop;
   }
 
   draw() {
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 
-    const piece = this.heldPieceClass ? new this.heldPieceClass() : null;
+    const piece = this.heldPiece;
     if (!piece) return;
 
     const canvasWidth = this.ctx.canvas.width; // 128px from HTML

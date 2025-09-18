@@ -263,15 +263,15 @@ export class Tetris {
       this.drawRectangle(point.row, point.col, this.currentPiece.COLOR);
     }
 
-    // draw
-    // const current = this.currentPiece.coords.map(
-    //   (coord) => new GridCoordinate({ col: coord.col, row: coord.row })
-    // );
-    // while
-
     // draw ghost piece, but change the colour to be transparent
     const ghostPiece = this.currentPiece.copy();
-    //
+    let pieceMoved;
+    do {
+      pieceMoved = ghostPiece.moveDown(this.matrix);
+    } while (ghostPiece.isVisible() && pieceMoved);
+    for (const point of ghostPiece.coords) {
+      this.drawRectangle(point.row, point.col, this.currentPiece.COLOR);
+    }
   }
 
   private drawRectangle(row: number, col: number, color: string) {

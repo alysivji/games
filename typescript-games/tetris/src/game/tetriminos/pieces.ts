@@ -91,6 +91,7 @@ export class Tetrimino {
     // You can swap `structuredClone` for your preferred deep-copy (e.g., lodash.cloneDeep).
     const data = structuredClone(this); // does not call constructors
     Object.assign(clone, data);
+    clone.COLOR = `${clone.COLOR}80`;
 
     return clone;
   }

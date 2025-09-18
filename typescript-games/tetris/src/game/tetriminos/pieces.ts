@@ -19,18 +19,33 @@ export class Tetrimino {
     return this.coords.some((coord) => coord.row >= 0);
   }
 
-  downOne() {
-    return this.coords.map(
-      (coord) => new GridCoordinate({ row: coord.row + 1, col: coord.col })
-    );
+  private move({ col, row }: { col: number; row: number }) {
+    return {
+      pivot: new GridCoordinate({
+        col: this.pivot.col + col,
+        row: this.pivot.row + row,
+      }),
+      coords: this.coords.map(
+        (coord) =>
+          new GridCoordinate({ col: coord.col + col, row: coord.row + row })
+      ),
+    };
   }
 
-  moveDown() {
-    this.pivot = new GridCoordinate({
-      row: this.pivot.row + 1,
-      col: this.pivot.col,
-    });
-    this.coords = this.downOne();
+  moveDown(matrix: GridMap) {
+    const { pivot, coords: newPieceLocation } = this.move({ col: 0, row: 1 });
+
+    const isMovePossible = newPieceLocation
+      .filter((coord) => coord.row >= 0)
+      .every((coord) => matrix.get(coord) === null);
+
+    if (!isMovePossible) {
+      return false;
+    }
+
+    this.pivot = pivot;
+    this.coords = newPieceLocation;
+    return true;
   }
 
   leftOne() {

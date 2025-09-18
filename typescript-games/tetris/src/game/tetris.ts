@@ -110,9 +110,10 @@ export class Tetris {
     }
 
     if (this.hardDrop) {
-      while (this.canMoveDown() && this.currentPiece.isVisible()) {
-        this.currentPiece.moveDown();
-      }
+      let pieceMoved;
+      do {
+        pieceMoved = this.currentPiece.moveDown(this.matrix);
+      } while (this.currentPiece.isVisible() && pieceMoved);
       this.hardDrop = false;
     }
 
@@ -139,12 +140,11 @@ export class Tetris {
       this.lastTick - this.lastDownwardMovementKeyPressTick;
     if (
       this.downKeyPressed &&
-      this.canMoveDown() &&
       this.currentPiece.isVisible() &&
       timeElapsedSinceLastDownward >= 20
     ) {
       this.lastDownwardMovementKeyPressTick = this.lastTick;
-      this.currentPiece.moveDown();
+      this.currentPiece.moveDown(this.matrix);
       this.lastGravityTick = this.lastTick;
       return;
     }
@@ -152,12 +152,14 @@ export class Tetris {
     // gravity
     const timeElapsedSinceLastGravityTick =
       this.lastTick - this.lastGravityTick;
-    if (timeElapsedSinceLastGravityTick < this.levelThresholdInMs()) return;
+    if (timeElapsedSinceLastGravityTick < this.levelThresholdInMs()) {
+      return;
+    }
     // return;
     this.lastGravityTick = this.lastTick;
-    if (this.canMoveDown()) {
-      this.currentPiece.moveDown();
-    } else {
+    const movedDown = this.currentPiece.moveDown(this.matrix);
+
+    if (!movedDown) {
       // lock the piece -- feels like we need to move this somewhere else
       // TODO -- don't lock piece right away
       // we should let the piece slide around after it hits the bottom
@@ -284,20 +286,6 @@ export class Tetris {
     const topLeftX = col * STEP + 1;
     const topLeftY = row * STEP + 1;
     this.ctx.clearRect(topLeftX, topLeftY, BOX_SIZE, BOX_SIZE);
-  }
-
-  private canMoveDown(): boolean {
-    const newPieceLocation = this.currentPiece.downOne();
-
-    const isBelowWall = newPieceLocation.some((coord) => coord.row >= N_ROWS);
-    if (isBelowWall) {
-      return false;
-    }
-
-    // is there a block in the way?
-    return newPieceLocation
-      .filter((coord) => coord.row >= 0)
-      .every((coord) => this.matrix.get(coord) === null);
   }
 
   private canMoveLeft(): boolean {

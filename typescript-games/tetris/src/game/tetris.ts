@@ -270,7 +270,7 @@ export class Tetris {
       pieceMoved = ghostPiece.moveDown(this.matrix);
     } while (ghostPiece.isVisible() && pieceMoved);
     for (const point of ghostPiece.coords) {
-      this.drawRectangle(point.row, point.col, this.currentPiece.COLOR);
+      this.drawRectangle(point.row, point.col, ghostPiece.COLOR);
     }
   }
 

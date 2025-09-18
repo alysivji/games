@@ -74,7 +74,7 @@
   - [x] next piece
   - [x] next 5 pieces
 - [x] hold piece
-- [ ] ui -- ghost where the pieces ends up
+- [x] ui -- ghost where the pieces ends up
 - [ ] das / arr
   - https://tetris.wiki/DAS
   - https://tetrisconcept.net/threads/nes-tetris-das.3035/

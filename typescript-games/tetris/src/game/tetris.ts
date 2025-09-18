@@ -127,12 +127,12 @@ export class Tetris {
       this.lastLateralMovementKeyPressTick = this.lastTick;
 
       // TODO -- if we are holding down both left and right -- how to handle
-      if (this.leftKeyPressed && this.canMoveLeft()) {
-        this.currentPiece.moveLeft();
+      if (this.leftKeyPressed) {
+        this.currentPiece.moveLeft(this.matrix);
       }
 
-      if (this.rightKeyPressed && this.canMoveRight()) {
-        this.currentPiece.moveRight();
+      if (this.rightKeyPressed) {
+        this.currentPiece.moveRight(this.matrix);
       }
     }
 
@@ -286,28 +286,6 @@ export class Tetris {
     const topLeftX = col * STEP + 1;
     const topLeftY = row * STEP + 1;
     this.ctx.clearRect(topLeftX, topLeftY, BOX_SIZE, BOX_SIZE);
-  }
-
-  private canMoveLeft(): boolean {
-    const newPieceLocation = this.currentPiece.leftOne();
-
-    const isLeftOfWall = newPieceLocation.some((coord) => coord.col < 0);
-    if (isLeftOfWall) {
-      return false;
-    }
-
-    return newPieceLocation.every((coord) => this.matrix.get(coord) === null);
-  }
-
-  private canMoveRight(): boolean {
-    const newPieceLocation = this.currentPiece.rightOne();
-
-    const isRightOfWall = newPieceLocation.some((coord) => coord.col >= N_COLS);
-    if (isRightOfWall) {
-      return false;
-    }
-
-    return newPieceLocation.every((coord) => this.matrix.get(coord) === null);
   }
 
   private handleKeyDown(e: KeyboardEvent) {

@@ -48,32 +48,34 @@ export class Tetrimino {
     return true;
   }
 
-  leftOne() {
-    return this.coords.map(
-      (coord) => new GridCoordinate({ row: coord.row, col: coord.col - 1 })
+  moveLeft(matrix: GridMap) {
+    const { pivot, coords: newPieceLocation } = this.move({ col: -1, row: 0 });
+
+    const isMovePossible = newPieceLocation.every(
+      (coord) => matrix.get(coord) === null
     );
+    if (!isMovePossible) {
+      return false;
+    }
+
+    this.pivot = pivot;
+    this.coords = newPieceLocation;
+    return true;
   }
 
-  moveLeft() {
-    this.pivot = new GridCoordinate({
-      row: this.pivot.row,
-      col: this.pivot.col - 1,
-    });
-    this.coords = this.leftOne();
-  }
+  moveRight(matrix) {
+    const { pivot, coords: newPieceLocation } = this.move({ col: +1, row: 0 });
 
-  rightOne() {
-    return this.coords.map(
-      (coord) => new GridCoordinate({ row: coord.row, col: coord.col + 1 })
+    const isMovePossible = newPieceLocation.every(
+      (coord) => matrix.get(coord) === null
     );
-  }
+    if (!isMovePossible) {
+      return false;
+    }
 
-  moveRight() {
-    this.pivot = new GridCoordinate({
-      row: this.pivot.row,
-      col: this.pivot.col + 1,
-    });
-    this.coords = this.rightOne();
+    this.pivot = pivot;
+    this.coords = newPieceLocation;
+    return true;
   }
 
   rotateClockwise(matrix: GridMap) {

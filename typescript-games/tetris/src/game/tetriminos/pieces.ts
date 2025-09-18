@@ -68,6 +68,17 @@ export class Tetrimino {
   rotateCounterClockwise(matrix: GridMap) {
     this.ROTATION_STRATEGY.rotateCounterClockwise(matrix);
   }
+
+  copy(): this {
+    const clone = Object.create(Object.getPrototypeOf(this)) as this;
+
+    // Deep-copy the *data* of the instance, then assign onto the new shell.
+    // You can swap `structuredClone` for your preferred deep-copy (e.g., lodash.cloneDeep).
+    const data = structuredClone(this); // does not call constructors
+    Object.assign(clone, data);
+
+    return clone;
+  }
 }
 
 export class IPiece extends Tetrimino {

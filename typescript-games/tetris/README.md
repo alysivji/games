@@ -50,6 +50,7 @@
     - Blog: [The history of Tetris randomizers](https://simon.lc/the-history-of-tetris-randomizers) | [HackerNews discussion](https://news.ycombinator.com/item?id=20872110)
     - Blog: [Is Tetris Biased?](https://babeheim.com/blog/2020-12-29-is-tetris-biased/)
   - [Clearing Lines](https://tetris.wiki/Line_clear)
+  - [Ghost piece](https://harddrop.com/wiki/Ghost_piece)
 - Other Projects
   - [tetrigo](https://github.com/Broderick-Westrope/tetrigo)
 

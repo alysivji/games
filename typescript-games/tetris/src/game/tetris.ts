@@ -253,9 +253,23 @@ export class Tetris {
   }
 
   private drawCurrentPiece() {
+    if (!this.currentPiece.isVisible) {
+      return;
+    }
+
     for (const point of this.currentPiece.coords) {
       this.drawRectangle(point.row, point.col, this.currentPiece.COLOR);
     }
+
+    // draw
+    // const current = this.currentPiece.coords.map(
+    //   (coord) => new GridCoordinate({ col: coord.col, row: coord.row })
+    // );
+    // while
+
+    // draw ghost piece, but change the colour to be transparent
+    const ghostPiece = this.currentPiece.copy();
+    //
   }
 
   private drawRectangle(row: number, col: number, color: string) {
@@ -280,7 +294,7 @@ export class Tetris {
       return false;
     }
 
-    // filter out the blocks that are above the field of play
+    // is there a block in the way?
     return newPieceLocation
       .filter((coord) => coord.row >= 0)
       .every((coord) => this.matrix.get(coord) === null);

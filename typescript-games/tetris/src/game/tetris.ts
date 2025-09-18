@@ -40,10 +40,10 @@ export class Tetris {
   lastDownwardMovementKeyPressTick: number;
   downKeyPressed: boolean = false;
 
-  rotateClockwiseKeyPressed: boolean = false;
-  rotateCounterClockwiseKeyPressed: boolean = false;
+  rotateClockwise: boolean = false;
+  rotateCounterClockwise: boolean = false;
 
-  holdPieceKeyPressed: boolean = false;
+  holdPiece: boolean = false;
 
   constructor({ tetrisCanvas, holdPieceCanvas, nextPieceCanvas }: TetrisProps) {
     tetrisCanvas.width = N_COLS * STEP;
@@ -84,7 +84,7 @@ export class Tetris {
 
   update(deltaTime: number) {
     // edge triggered controls -- rotation + hold
-    if (this.holdPieceKeyPressed) {
+    if (this.holdPiece) {
       const pieceFromHold = this.holdManager.holdPiece(this.currentPiece);
       if (pieceFromHold) {
         this.currentPiece = pieceFromHold;
@@ -94,18 +94,18 @@ export class Tetris {
 
       this.holdManager.draw();
 
-      this.holdPieceKeyPressed = false;
+      this.holdPiece = false;
       return;
     }
 
-    if (this.rotateClockwiseKeyPressed) {
+    if (this.rotateClockwise) {
       this.currentPiece.rotateClockwise(this.matrix);
-      this.rotateClockwiseKeyPressed = false;
+      this.rotateClockwise = false;
     }
 
-    if (this.rotateCounterClockwiseKeyPressed) {
+    if (this.rotateCounterClockwise) {
       this.currentPiece.rotateCounterClockwise(this.matrix);
-      this.rotateCounterClockwiseKeyPressed = false;
+      this.rotateCounterClockwise = false;
     }
 
     // lateral movement + soft drop
@@ -137,7 +137,8 @@ export class Tetris {
     ) {
       this.lastDownwardMovementKeyPressTick = this.lastTick;
       this.currentPiece.moveDown();
-      this.lastGravityTick = this.lastGravityTick;
+      this.lastGravityTick = this.lastTick;
+      return;
     }
 
     // gravity
@@ -313,15 +314,23 @@ export class Tetris {
     }
 
     if (e.code === 'KeyX' && !e.repeat) {
-      this.rotateClockwiseKeyPressed = true;
+      this.rotateClockwise = true;
     }
 
     if (e.code === 'KeyZ' && !e.repeat) {
-      this.rotateCounterClockwiseKeyPressed = true;
+      this.rotateCounterClockwise = true;
     }
 
     if (e.code === 'KeyC' && !e.repeat) {
-      this.holdPieceKeyPressed = true;
+      this.holdPiece = true;
+    }
+
+    if (
+      e.key === 'Shift' &&
+      e.location === KeyboardEvent.DOM_KEY_LOCATION_LEFT &&
+      !e.repeat
+    ) {
+      this.holdPiece = true;
     }
   }
 

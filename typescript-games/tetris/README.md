@@ -63,10 +63,10 @@
 
 - [x] end game state
   - spawn in level rows and figure out how to handle
-- [ ] controls
+- [x] controls
   - [x] key press left and right
   - [x] rotate
-  - [ ] hard drop
+  - [x] hard drop
 - [x] clearing lines
 - [x] 7 bag randomize piece
 - [x] show next queue
@@ -80,8 +80,10 @@
 - [ ] slide piece before it locks
 - [ ] score
 - [ ] reach: gamepad API
-- [ ] https://harddrop.com/wiki/Nintendo_Rotation_System
 - [ ] collect stats for things like # rotations, # drops, pieces seen
+- [ ] other rotation systems
+  - [ ] https://harddrop.com/wiki/Nintendo_Rotation_System
+  - [ ] https://harddrop.com/wiki/ARS
 
 ## Chat GPT suggestions
 

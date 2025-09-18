@@ -44,6 +44,7 @@ export class Tetris {
   rotateCounterClockwise: boolean = false;
 
   holdPiece: boolean = false;
+  hardDrop: boolean = false;
 
   constructor({ tetrisCanvas, holdPieceCanvas, nextPieceCanvas }: TetrisProps) {
     tetrisCanvas.width = N_COLS * STEP;
@@ -83,7 +84,7 @@ export class Tetris {
   }
 
   update(deltaTime: number) {
-    // edge triggered controls -- rotation + hold
+    // edge triggered controls -- rotation + hold + hard drop
     if (this.holdPiece) {
       const pieceFromHold = this.holdManager.holdPiece(this.currentPiece);
       if (pieceFromHold) {
@@ -106,6 +107,13 @@ export class Tetris {
     if (this.rotateCounterClockwise) {
       this.currentPiece.rotateCounterClockwise(this.matrix);
       this.rotateCounterClockwise = false;
+    }
+
+    if (this.hardDrop) {
+      while (this.canMoveDown() && this.currentPiece.isVisible()) {
+        this.currentPiece.moveDown();
+      }
+      this.hardDrop = false;
     }
 
     // lateral movement + soft drop
@@ -325,12 +333,12 @@ export class Tetris {
       this.holdPiece = true;
     }
 
-    if (
-      e.key === 'Shift' &&
-      e.location === KeyboardEvent.DOM_KEY_LOCATION_LEFT &&
-      !e.repeat
-    ) {
+    if (e.code === 'ShiftLeft' && !e.repeat) {
       this.holdPiece = true;
+    }
+
+    if (e.code === 'Space' && !e.repeat) {
+      this.hardDrop = true;
     }
   }
 

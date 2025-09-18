@@ -1,0 +1,221 @@
+/* ---------- Theme / tokens ---------- */
+:root {
+  --bg: #0b0b0c;
+  --panel: #111216;
+  --panel-border: #2a2d35;
+  --accent: #6cf0ff;
+  --text: #e7eaf0;
+  --muted: #aab0bd;
+
+  /* Board sizing (you can tweak these) */
+  --cols: 10;
+  --rows: 20;
+  --cell: 30px; /* <= visual size used for layout only */
+}
+
+/* ---------- Base ---------- */
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+html {
+  color-scheme: dark;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+body {
+  background: radial-gradient(1200px 800px at 50% 30%, #101218 0%, #0b0b0c 60%, #08090a 100%);
+  color: var(--text);
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+
+/* ---------- Layout ---------- */
+.game-shell {
+  display: grid;
+  grid-template-columns: 160px minmax(320px, auto) 160px;
+  gap: 20px;
+  align-items: start;
+  width: min(1100px, 96vw);
+}
+
+/* Panels (Hold / Next) */
+.panel {
+  background: linear-gradient(#12141a, #0f1116);
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.35), inset 0 0 0 1px rgba(255,255,255,0.02);
+}
+
+.panel-title {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin: 0 0 10px;
+}
+
+/* Center column */
+.center {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 12px;
+  min-width: calc(var(--cols) * var(--cell));
+}
+
+/* HUD */
+.hud {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 10px;
+  justify-content: start;
+  background: linear-gradient(#141720, #0f1117);
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+
+.stat {
+  display: grid;
+  gap: 2px;
+  min-width: 90px;
+}
+.stat span {
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.stat strong {
+  font-size: 20px;
+  line-height: 1.1;
+}
+
+/* Stage wraps the board and maintains aspect ratio visually */
+.stage {
+  display: grid;
+  place-items: center;
+  background: linear-gradient(180deg, #0e1016, #0c0e14);
+  border: 1px solid var(--panel-border);
+  border-radius: 14px;
+  padding: 14px;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.02),
+    0 12px 28px rgba(0,0,0,0.35);
+}
+
+/* Canvas: use attributes for actual resolution; CSS scales it crisply */
+canvas {
+  display: block;
+  border-radius: 8px;
+  border: 1px solid #2a2d35;
+  background: #0a0c12;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* Board canvas sizing (visual) */
+#tetris {
+  width: calc(var(--cols) * var(--cell));
+  height: calc(var(--rows) * var(--cell));
+}
+
+/* HOLD & NEXT look consistent, just narrower */
+#hold, #next {
+  width: 100%;
+}
+
+/* Controls footer */
+/* legend layout */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px 20px;            /* row gap / column gap */
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: rgba(15, 17, 23, 0.9);
+  border: 1px solid #2a2d35;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.35), inset 0 0 0 1px rgba(255,255,255,0.03);
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* each chunk like "← → Move" */
+.legend .item {
+  display: inline-flex;
+  align-items: center;       /* fixes the “low” keys */
+  gap: 8px;
+  position: relative;
+  line-height: 1;            /* consistent baseline */
+}
+
+/* subtle dot separators */
+.legend .item:not(:last-child)::after {
+  content: "•";
+  opacity: 0.5;
+  margin-left: 14px;
+}
+
+/* keys */
+.legend kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 26px;           /* square arrow keys */
+  height: 26px;
+  padding: 0 8px;            /* expands for text keys like Space/Shift */
+  border-radius: 7px;
+  border: 1px solid #2a2d35;
+  background: #171a22;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.06), inset 0 -1px 0 rgba(0,0,0,0.5);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1;
+  user-select: none;
+}
+
+/* label text (e.g., Move, Soft Drop…) */
+.legend em {
+  font-style: normal;
+  color: #c7cbd6;
+  opacity: 0.9;
+}
+
+/* make “Space” look wider */
+.legend kbd:contains("Space") { padding: 0 12px; }
+
+/* mobile tightening */
+@media (max-width: 520px) {
+  .legend { gap: 10px 14px; font-size: 12px; }
+  .legend kbd { min-width: 24px; height: 24px; font-size: 11px; }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  :root { --cell: 24px; }
+
+  .game-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .panel {
+    display: grid;
+    justify-items: start;
+  }
+
+  /* Stack: HUD, Board, Next, Hold */
+  .panel:nth-of-type(1) { order: 3; } /* Hold */
+  .panel:nth-of-type(2) { order: 4; } /* Next */
+  .center { order: 2; }
+}
+
+@media (max-width: 420px) {
+  :root { --cell: 20px; }
+}

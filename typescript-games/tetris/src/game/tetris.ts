@@ -128,11 +128,11 @@ export class Tetris {
 
       // TODO -- if we are holding down both left and right -- how to handle
       if (this.leftKeyPressed) {
-        this.currentPiece.moveLeft(this.matrix);
+        this.currentPiece.moveLateral(this.matrix, { col: -1, row: 0 });
       }
 
       if (this.rightKeyPressed) {
-        this.currentPiece.moveRight(this.matrix);
+        this.currentPiece.moveLateral(this.matrix, { col: +1, row: 0 });
       }
     }
 

@@ -48,23 +48,11 @@ export class Tetrimino {
     return true;
   }
 
-  moveLeft(matrix: GridMap) {
-    const { pivot, coords: newPieceLocation } = this.move({ col: -1, row: 0 });
-
-    const isMovePossible = newPieceLocation.every(
-      (coord) => matrix.get(coord) === null
-    );
-    if (!isMovePossible) {
-      return false;
-    }
-
-    this.pivot = pivot;
-    this.coords = newPieceLocation;
-    return true;
-  }
-
-  moveRight(matrix) {
-    const { pivot, coords: newPieceLocation } = this.move({ col: +1, row: 0 });
+  moveLateral(matrix: GridMap, { row, col }: { row: number; col: number }) {
+    const { pivot, coords: newPieceLocation } = this.move({
+      col: col,
+      row: row,
+    });
 
     const isMovePossible = newPieceLocation.every(
       (coord) => matrix.get(coord) === null
